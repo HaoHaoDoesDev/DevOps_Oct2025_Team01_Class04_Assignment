@@ -1,40 +1,86 @@
 "use client";
 
-import Navbar from "./_components/landing-navbar";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import userRoutes from "@/config/user-routes";
+import { useRouter } from "next/navigation";
+import CardNav from "@/components/ui/nav-bar";
+
+const items = [
+  {
+    label: "About",
+    bgColor: "#0D0716",
+    textColor: "#fff",
+    links: [
+      { label: "Company", ariaLabel: "About Company", href: "/about" },
+      { label: "Careers", ariaLabel: "About Careers", href: "/careers" }
+    ]
+  },
+  {
+    label: "Projects", 
+    bgColor: "#170D27",
+    textColor: "#fff",
+    links: [
+      { label: "Featured", ariaLabel: "Featured Projects", href: "/projects/featured" },
+      { label: "Case Studies", ariaLabel: "Project Case Studies", href: "/projects/case-studies" }
+    ]
+  },
+  {
+    label: "Contact",
+    bgColor: "#271E37", 
+    textColor: "#fff",
+    links: [
+      { label: "Email", ariaLabel: "Email us", href: "mailto:hello@example.com" },
+      { label: "Twitter", ariaLabel: "Twitter", href: "https://twitter.com" },
+      { label: "LinkedIn", ariaLabel: "LinkedIn", href: "https://linkedin.com" }
+    ]
+  }
+];
+
 
 export default function LandingPage() {
+  const router = useRouter();
   return (
     <main>
-      <Navbar/>
+      <CardNav
+      items={items}
+      baseColor="#fff"
+      menuColor="#000"
+      buttonBgColor="#111"
+      buttonTextColor="#fff"
+      ease="power3.out"
+      />
       <div className="flex flex-col max-w-8xl md:flex-row items-center px-8 md:px-16 pt-32 pb-16 min-h-[80vh] ">
         <section className="w-full md:w-1/2 flex justify-center">
           <Image
-            src="/assets/landing-page-image.png"
+            src="/assets/landing-page-icon.png"
             alt="Logo"
-            width={500}
-            height={500}
+            width={450}
+            height={450}
           />
         </section>
         <section className="w-full md:w-1/2 max-w-150">
-          <h1 className="text-4xl font-bold mb-4 text-zinc-900 leading-tight">
+          <h1 className="text-4xl font-bold mb-2 text-zinc-900 ">
             Secure storage for what matters most
           </h1>
           <p className="text-lg text-zinc-600 leading-relaxed mb-8">
-            Discover the top Automation Testing Tools in the market & learn how these tools 
-            can help you deliver high-quality software.
+            Built for privacy. Designed for simplicity
           </p>
           <div className="flex gap-5">
-            <button 
-              className="px-6 py-2.5 bg-blue-500 text-white rounded font-medium hover:bg-blue-600 transition-colors duration-300 cursor-pointer"
+            <Button
+              variant="default"
+              size="lg"
+              onClick={() => router.push(userRoutes.authentication)}
             >
               Get Started
-            </button>
-            <button 
-              className="px-6 py-2.5 bg-white text-blue-500 border border-blue-500 rounded font-medium hover:bg-blue-500 hover:text-white transition-all duration-300 cursor-pointer" 
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => router.push(userRoutes.documentation)}
             >
               Find Out More
-            </button>
+            </Button>
           </div>
         </section>
       </div>
