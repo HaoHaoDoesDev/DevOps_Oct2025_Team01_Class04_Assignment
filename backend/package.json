@@ -3,10 +3,15 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
-    "pg": "^8.17.1"
+    "pg": "^8.17.1",
+    "prettier": "^3.8.0"
   },
   "devDependencies": {
     "@types/pg": "^8.16.0",
     "tsx": "^4.21.0"
+  },
+  "scripts": {
+    "format:check": "pnpm exec prettier --check '**/*.{ts,tsx,js,jsx,mjs,json,yaml,yml}'",
+    "format:write": "pnpm exec prettier --write '**/*.{ts,tsx,js,jsx,mjs,json,yaml,yml}'"
   }
 }

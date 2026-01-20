@@ -1,5 +1,5 @@
-import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
+import { Pool } from "pg";
+import * as dotenv from "dotenv";
 
 dotenv.config();
 
@@ -10,4 +10,3 @@ export const db = new Pool({
   password: process.env.DB_PASSWORD,
   port: Number(process.env.DB_PORT),
 });
-
