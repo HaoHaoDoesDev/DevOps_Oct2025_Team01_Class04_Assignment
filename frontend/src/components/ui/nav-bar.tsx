@@ -4,6 +4,8 @@ import React, { useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import Image from 'next/image';
 import { GoArrowUpRight } from 'react-icons/go';
+import { useRouter } from 'next/navigation';
+import userRoutes from '@/config/user-routes';
 
 type CardNavLink = {
   label: string;
@@ -34,16 +36,14 @@ const CardNav: React.FC<CardNavProps> = ({
   ease = 'power3.out',
   baseColor = '#fff',
   menuColor,
-  buttonBgColor,
-  buttonTextColor
 }) => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const router = useRouter();
 
-  // 1. Memoize Height Calculation
   const calculateHeight = useCallback(() => {
     const navEl = navRef.current;
     if (!navEl) return 260;
@@ -77,7 +77,6 @@ const CardNav: React.FC<CardNavProps> = ({
     return 260;
   }, []);
 
-  // 2. Memoize Timeline Creation (Fixes the "missing name" error)
   const createTimeline = useCallback(() => {
     const navEl = navRef.current;
     if (!navEl) return null;
@@ -104,7 +103,6 @@ const CardNav: React.FC<CardNavProps> = ({
     return tl;
   }, [calculateHeight, ease]);
 
-  // 3. Initialize Animation
   useLayoutEffect(() => {
     const tl = createTimeline();
     tlRef.current = tl;
@@ -113,9 +111,8 @@ const CardNav: React.FC<CardNavProps> = ({
       tl?.kill();
       tlRef.current = null;
     };
-  }, [createTimeline, items]); // Re-runs if items change
+  }, [createTimeline, items]);
 
-  // 4. Handle Resizing
   useLayoutEffect(() => {
     const handleResize = () => {
       if (!tlRef.current) return;
@@ -187,8 +184,8 @@ const CardNav: React.FC<CardNavProps> = ({
 
           <button
             type="button"
-            className="hidden md:inline-flex border-0 rounded-lg px-4 items-center h-full font-medium cursor-pointer transition-colors duration-300"
-            style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
+            className="hidden bg-blue-500 text-white hover:bg-blue-600 md:inline-flex border-0 rounded-sm px-4 items-center h-full font-medium cursor-pointer transition-colors duration-300"
+            onClick={() => router.push(userRoutes.authentication)}
           >
             Get Started
           </button>
@@ -211,7 +208,7 @@ const CardNav: React.FC<CardNavProps> = ({
               <div className="mt-auto flex flex-col gap-1">
                 {item.links?.map((lnk, i) => (
                   <a key={`${lnk.label}-${i}`} className="inline-flex items-center gap-1.5 no-underline hover:opacity-75 text-[15px] md:text-[16px]" href={lnk.href} aria-label={lnk.ariaLabel}>
-                    <GoArrowUpRight className="shrink-0" />
+                    <GoArrowUpRight className="shrink-0 text-white" />
                     {lnk.label}
                   </a>
                 ))}

@@ -9,27 +9,26 @@ import CardNav from "@/components/ui/nav-bar";
 const items = [
   {
     label: "About",
-    bgColor: "#0D0716",
+    bgColor: "#2196F3",
     textColor: "#fff",
     links: [
-      { label: "Company", ariaLabel: "About Company", href: "/about" },
-      { label: "Careers", ariaLabel: "About Careers", href: "/careers" }
+      { label: "Documentation", ariaLabel: "About Software", href: "/about" },
+      { label: "Team", ariaLabel: "About Team", href: "/careers" }
     ]
   },
   {
-    label: "Projects", 
-    bgColor: "#170D27",
+    label: "Features", 
+    bgColor: "#2196F3",
     textColor: "#fff",
     links: [
-      { label: "Featured", ariaLabel: "Featured Projects", href: "/projects/featured" },
-      { label: "Case Studies", ariaLabel: "Project Case Studies", href: "/projects/case-studies" }
+      { label: "Featured", ariaLabel: "Project Features", href: "/projects/featured" },
     ]
   },
   {
     label: "Contact",
-    bgColor: "#271E37", 
+    bgColor: "#2196F3", 
     textColor: "#fff",
-    links: [
+    links: [ 
       { label: "Email", ariaLabel: "Email us", href: "mailto:hello@example.com" },
       { label: "Twitter", ariaLabel: "Twitter", href: "https://twitter.com" },
       { label: "LinkedIn", ariaLabel: "LinkedIn", href: "https://linkedin.com" }
@@ -45,7 +44,7 @@ export default function LandingPage() {
       <CardNav
       items={items}
       baseColor="#fff"
-      menuColor="#000"
+      menuColor="#13379c"
       buttonBgColor="#111"
       buttonTextColor="#fff"
       ease="power3.out"
