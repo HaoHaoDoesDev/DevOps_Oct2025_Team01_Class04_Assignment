@@ -13,41 +13,52 @@ const items = [
     textColor: "#fff",
     links: [
       { label: "Documentation", ariaLabel: "About Software", href: "/about" },
-      { label: "Team", ariaLabel: "About Team", href: "/careers" }
-    ]
+      { label: "Team", ariaLabel: "About Team", href: "/careers" },
+    ],
   },
   {
-    label: "Features", 
+    label: "Features",
     bgColor: "#2196F3",
     textColor: "#fff",
     links: [
-      { label: "Featured", ariaLabel: "Project Features", href: "/projects/featured" },
-    ]
+      {
+        label: "Featured",
+        ariaLabel: "Project Features",
+        href: "/projects/featured",
+      },
+    ],
   },
   {
     label: "Contact",
-    bgColor: "#2196F3", 
+    bgColor: "#2196F3",
     textColor: "#fff",
-    links: [ 
-      { label: "Email", ariaLabel: "Email us", href: "mailto:hello@example.com" },
+    links: [
+      {
+        label: "Email",
+        ariaLabel: "Email us",
+        href: "mailto:hello@example.com",
+      },
       { label: "Twitter", ariaLabel: "Twitter", href: "https://twitter.com" },
-      { label: "LinkedIn", ariaLabel: "LinkedIn", href: "https://linkedin.com" }
-    ]
-  }
+      {
+        label: "LinkedIn",
+        ariaLabel: "LinkedIn",
+        href: "https://linkedin.com",
+      },
+    ],
+  },
 ];
-
 
 export default function LandingPage() {
   const router = useRouter();
   return (
     <main>
       <CardNav
-      items={items}
-      baseColor="#fff"
-      menuColor="#13379c"
-      buttonBgColor="#111"
-      buttonTextColor="#fff"
-      ease="power3.out"
+        items={items}
+        baseColor="#fff"
+        menuColor="#13379c"
+        buttonBgColor="#111"
+        buttonTextColor="#fff"
+        ease="power3.out"
       />
       <div className="flex flex-col max-w-8xl md:flex-row items-center px-8 md:px-16 pt-32 pb-16 min-h-[80vh] ">
         <section className="w-full md:w-1/2 flex justify-center">
@@ -86,4 +97,3 @@ export default function LandingPage() {
     </main>
   );
 }
-
