@@ -4,8 +4,7 @@ import React, { useLayoutEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import Image from "next/image";
 import { GoArrowUpRight } from "react-icons/go";
-import { useRouter } from "next/navigation";
-import userRoutes from "@/config/user-routes";
+import Link from "next/link";
 
 type CardNavLink = {
   label: string;
@@ -42,7 +41,6 @@ const CardNav: React.FC<CardNavProps> = ({
   const navRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
-  const router = useRouter();
 
   const calculateHeight = useCallback(() => {
     const navEl = navRef.current;
@@ -188,23 +186,18 @@ const CardNav: React.FC<CardNavProps> = ({
             />
           </div>
 
-          <div className="logo-container flex items-center md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+          <Link
+            href="/"
+            className="logo-container flex items-center md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
+          >
             <Image
               src="/assets/logo/devops-assignment-logo.png"
               alt="Logo"
               width={150}
               height={40}
-              className="cursor-pointer"
+              priority
             />
-          </div>
-
-          <button
-            type="button"
-            className="hidden bg-blue-500 text-white hover:bg-blue-600 md:inline-flex border-0 rounded-sm px-4 items-center h-full font-medium cursor-pointer transition-colors duration-300"
-            onClick={() => router.push(userRoutes.authentication)}
-          >
-            Get Started
-          </button>
+          </Link>
         </div>
 
         <div
