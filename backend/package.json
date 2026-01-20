@@ -17,6 +17,7 @@
   "scripts": {
     "format:check": "pnpm exec prettier --check '**/*.{ts,tsx,js,jsx,mjs,json,yaml,yml}'",
     "format:write": "pnpm exec prettier --write '**/*.{ts,tsx,js,jsx,mjs,json,yaml,yml}'",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "build": "tsc"
   }
 }
