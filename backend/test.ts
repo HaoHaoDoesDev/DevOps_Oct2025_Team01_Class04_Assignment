@@ -1,4 +1,4 @@
-import { getAllUsers } from "./models/User";
+import { getAllUsers } from "./src/models/User";
 
 async function runTest() {
   console.log("--- Starting Database Test ---");
