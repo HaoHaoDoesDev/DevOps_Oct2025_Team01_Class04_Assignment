@@ -6,7 +6,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/user-store";
-
+import { loginSchema } from "@/schema/user-authentication/user-auth-schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,11 +17,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -51,7 +46,7 @@ export function LoginForm() {
         throw new Error(result.message || "Login failed");
       }
 
-      setAuth(result.token, result.role);
+      setAuth(result.token, result.role, result.userId);
 
       toast.success("Login successful!");
 
