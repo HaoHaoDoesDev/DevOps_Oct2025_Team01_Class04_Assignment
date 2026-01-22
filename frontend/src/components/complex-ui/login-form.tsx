@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import userRoutes from "@/config/user-routes";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -48,10 +49,12 @@ export function LoginForm() {
 
       setAuth(result.token, result.role, result.userId);
 
+      console.log(result.role);
+
       toast.success("Login successful!");
 
       if (result.role === "ADMIN") {
-        router.push("/admin");
+        router.push(userRoutes.adminDashboard(result.userId));
       } else {
         router.push("/user");
       }
