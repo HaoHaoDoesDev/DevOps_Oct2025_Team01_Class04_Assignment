@@ -1,6 +1,6 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(256) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     role VARCHAR(10) CHECK (role IN ('ADMIN', 'USER')) NOT NULL
 );
