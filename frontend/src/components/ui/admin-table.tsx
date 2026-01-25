@@ -43,7 +43,10 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={header.id === "actions" ? "text-right" : ""}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -60,7 +63,14 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={
+                        cell.column.id === "actions"
+                          ? "sticky right-0 bg-background text-right shadow-[-10px_0_10px_-10px_rgba(0,0,0,0.1)]"
+                          : ""
+                      }
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
