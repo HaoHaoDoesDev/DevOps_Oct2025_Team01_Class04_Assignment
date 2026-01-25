@@ -6,6 +6,6 @@ const userRoutes = {
   services: "/services",
 
   //Admin Routes
-  adminDashboard: (userId: number) => `/admin/${encodeURIComponent(userId)}`,
+  adminDashboard: (userId: number) => `/${encodeURIComponent(userId)}`,
 };
 export default userRoutes;
