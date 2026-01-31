@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabaseClient.js'; 
+import { db } from '../config/db.js'; 
 import type { Multer } from 'multer';
 export interface UserFile {
   id?: number;
@@ -31,18 +32,26 @@ export class FileModel {
     return data.publicUrl;
   }
 
-  /**
-   * Inserts the file metadata into the SQL "user_files" table
-   */
-  static async createRecord(fileData: UserFile): Promise<UserFile> {
-    const { data, error } = await supabase
-      .from('user_files')
-      .insert([fileData])
-      .select()
-      .single();
 
-    if (error) throw new Error(`Database Insert Failed: ${error.message}`);
+  static async createRecord(fileData: UserFile): Promise<UserFile> {
+    const sql = `
+      INSERT INTO user_files (user_id, file_name, blob_url, file_size_bytes)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
     
-    return data;
+    const values = [
+      fileData.user_id,
+      fileData.file_name,
+      fileData.blob_url,
+      fileData.file_size_bytes
+    ];
+
+    try {
+      const result = await db.query(sql, values);
+      return result.rows[0];
+    } catch (error: any) {
+      throw new Error(`Database Insert Failed: ${error.message}`);
+    }
   }
 }

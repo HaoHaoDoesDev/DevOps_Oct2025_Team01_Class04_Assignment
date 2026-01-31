@@ -25,7 +25,8 @@
     "@types/pg": "^8.16.0",
     "eslint-plugin-security": "^3.0.1",
     "globals": "^17.0.0",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "format:check": "pnpm exec prettier --check '**/*.{ts,tsx,js,jsx,mjs,json,yaml,yml}'",
