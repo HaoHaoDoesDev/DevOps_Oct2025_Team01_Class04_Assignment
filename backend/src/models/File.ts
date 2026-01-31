@@ -1,6 +1,6 @@
-import { supabase } from '../config/supabaseClient.js'; 
-import { db } from '../config/db.js'; 
-import type { Multer } from 'multer';
+import { supabase } from "../config/supabaseClient.js";
+import { db } from "../config/db.js";
+import type { Multer } from "multer";
 export interface UserFile {
   id?: number;
   user_id: number;
@@ -11,27 +11,27 @@ export interface UserFile {
 }
 
 export class FileModel {
-
-  static async uploadToBucket(userId: number, file: Express.Multer.File): Promise<string> {
+  static async uploadToBucket(
+    userId: number,
+    file: Express.Multer.File,
+  ): Promise<string> {
     const filePath = `${userId}/${Date.now()}_${file.originalname}`;
-    
-    const { error: storageError } = await supabase
-      .storage
-      .from('user_uploads') 
+
+    const { error: storageError } = await supabase.storage
+      .from("user_uploads")
       .upload(filePath, file.buffer, {
         contentType: file.mimetype,
       });
 
-    if (storageError) throw new Error(`Storage Upload Failed: ${storageError.message}`);
+    if (storageError)
+      throw new Error(`Storage Upload Failed: ${storageError.message}`);
 
-    const { data } = supabase
-      .storage
-      .from('user_uploads')
+    const { data } = supabase.storage
+      .from("user_uploads")
       .getPublicUrl(filePath);
 
     return data.publicUrl;
   }
-
 
   static async createRecord(fileData: UserFile): Promise<UserFile> {
     const sql = `
@@ -39,12 +39,12 @@ export class FileModel {
       VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
-    
+
     const values = [
       fileData.user_id,
       fileData.file_name,
       fileData.blob_url,
-      fileData.file_size_bytes
+      fileData.file_size_bytes,
     ];
 
     try {

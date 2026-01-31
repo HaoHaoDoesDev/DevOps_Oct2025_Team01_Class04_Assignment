@@ -1,15 +1,16 @@
-import { db } from "../config/db.js"; 
+import { db } from "../config/db.js";
 
 export interface User {
   id: number;
   email: string;
-  password_hash: string; 
+  password_hash: string;
   role: string;
 }
 
 export const findUserByEmail = async (email: string): Promise<User | null> => {
   try {
-    const query = "SELECT id, email, password_hash, role FROM users WHERE email = $1";
+    const query =
+      "SELECT id, email, password_hash, role FROM users WHERE email = $1";
     const { rows } = await db.query(query, [email]);
     return rows[0] || null;
   } catch (error) {
