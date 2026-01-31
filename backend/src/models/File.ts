@@ -1,6 +1,5 @@
 import { supabase } from "../config/supabaseClient.js";
 import { db } from "../config/db.js";
-import type { Multer } from "multer";
 export interface UserFile {
   id?: number;
   user_id: number;
@@ -50,8 +49,10 @@ export class FileModel {
     try {
       const result = await db.query(sql, values);
       return result.rows[0];
-    } catch (error: any) {
-      throw new Error(`Database Insert Failed: ${error.message}`);
+    } catch (error: unknown) {
+      // FIX: Extract the message safely, then ALWAYS throw
+      const errorMessage = error instanceof Error ? error.message : "Unknown Database Error";
+      throw new Error(`Database Insert Failed: ${errorMessage}`);
     }
   }
 }

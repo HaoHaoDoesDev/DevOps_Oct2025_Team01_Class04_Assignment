@@ -1,4 +1,4 @@
-import { Router, type IRouter } from "express";
+import { Router } from "express";
 import multer from "multer"; // Import multer here
 import { FileController } from "../controllers/fileController.js";
 
