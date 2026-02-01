@@ -25,16 +25,16 @@ export const login = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1h" },
     );
 
-    res.status(200).json({ 
-      token, 
+    res.status(200).json({
+      token,
       role: user.role,
-      userId: user.id, 
-      message: "Login successful" 
+      userId: user.id,
+      message: "Login successful",
     });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Internal server error" });
   }
 };
