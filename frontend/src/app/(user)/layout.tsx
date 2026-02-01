@@ -8,7 +8,7 @@ import {
 import { AdminAppSidebar } from "@/components/complex-ui/admin-sidebar";
 import { Separator } from "@/components/ui/separator";
 
-export default function AdminLayout({
+export default function UserDashboardLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -27,12 +27,11 @@ const navData = [
     title: "Tools",
     items: [
       { title: "Dashboard", route: "dashboard" },
-      { title: "AI-Assistant", route: "featured" },
     ],
   },
 ];
 
-export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+export function AdminAppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const { userId, logout } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
