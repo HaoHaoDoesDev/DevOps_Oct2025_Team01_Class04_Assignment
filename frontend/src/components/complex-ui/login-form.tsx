@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import userRoutes from "@/config/user-routes";
+import Cookies from "js-cookie";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -47,21 +48,27 @@ export function LoginForm() {
         throw new Error(result.message || "Login failed");
       }
 
-      setAuth(result.token, result.role, result.userId);
+      Cookies.set("token", result.token, {
+        expires: 1,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
 
-      console.log(result.role);
+      setAuth(result.token, result.role, result.userId);
 
       toast.success("Login successful!");
 
       if (result.role === "ADMIN") {
         router.push(userRoutes.adminDashboard(result.userId));
       } else {
-        router.push("/user");
+        router.push(userRoutes.userDashboard(result.userId));
       }
     } catch (error: unknown) {
+      console.error("Login attempt failed:", error);
       const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
-
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred during login";
       toast.error(errorMessage);
     }
   };

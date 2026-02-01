@@ -5,7 +5,10 @@ const userRoutes = {
   developers: "/developers",
   services: "/services",
 
-  //Admin Routes
-  adminDashboard: (userId: number) => `/${encodeURIComponent(userId)}`,
+  // Admin Routes
+  adminDashboard: (userId: number) => `/admin/${encodeURIComponent(userId)}`,
+
+  // User Routes
+  userDashboard: (userId: number) => `/user/${encodeURIComponent(userId)}`,
 };
 export default userRoutes;
