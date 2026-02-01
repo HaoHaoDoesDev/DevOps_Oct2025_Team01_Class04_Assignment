@@ -21,10 +21,10 @@ const start = async () => {
     console.log("✅ Database connected");
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server ready at http://localhost:${PORT}`);
+      console.log(`Server ready at http://localhost:${PORT}`);
     });
   } catch (err) {
-    console.error("❌ Shutdown: Database connection failed", err);
+    console.error("Shutdown: Database connection failed", err);
     process.exit(1);
   }
 };
