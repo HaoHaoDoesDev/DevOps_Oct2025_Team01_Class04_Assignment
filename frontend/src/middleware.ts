@@ -9,20 +9,22 @@ const JWT_SECRET = new TextEncoder().encode(
 function getRedirectPath(pathname: string, payload: JWTPayload): string | null {
   const userId = String(payload.userId);
   const role = payload.role as string;
-
   if (pathname.startsWith("/admin") && role !== "ADMIN") {
     return "/";
+  }
+  if (pathname.startsWith("/user") && role === "ADMIN") {
+    return `/admin/${userId}`;
   }
 
   if (pathname.startsWith("/user/")) {
     const urlId = pathname.split("/")[2];
-    if (urlId !== userId) return `/user/${userId}`;
+    if (role === "USER" && urlId !== userId) {
+      return `/user/${userId}`;
+    }
   }
-
   if (pathname === "/authentication") {
     return role === "ADMIN" ? `/admin/${userId}` : `/user/${userId}`;
   }
-
   return null;
 }
 
