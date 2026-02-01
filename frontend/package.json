@@ -26,6 +26,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gsap": "^3.14.2",
+    "jose": "^6.1.3",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.562.0",
     "motion": "^12.27.0",

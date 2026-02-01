@@ -25,9 +25,7 @@ import { toast } from "sonner";
 const navData = [
   {
     title: "Tools",
-    items: [
-      { title: "Dashboard", route: "dashboard" },
-    ],
+    items: [{ title: "Dashboard", route: "dashboard" }],
   },
 ];
 
