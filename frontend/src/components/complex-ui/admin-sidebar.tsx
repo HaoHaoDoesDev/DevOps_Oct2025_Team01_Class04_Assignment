@@ -38,15 +38,9 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
   const handleLogout = () => {
-    // Clear Zustand stores
     logout();
-
-    // Remove JWT token (if stored in localStorage)
     Cookies.remove("token");
-
-    // Redirect to login or home page
     router.push(user.authentication);
-
     toast.success("Logging Out");
   };
 

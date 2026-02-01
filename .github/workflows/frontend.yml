@@ -6,6 +6,7 @@ on:
       - "frontend/**"
 
 jobs:
+  # JOB 1: Fast feedback for the developer (Lint, Build, Audit)
   frontend_check:
     runs-on: ubuntu-latest
     defaults:
@@ -39,3 +40,34 @@ jobs:
 
       - name: Next.js Build Check
         run: pnpm run build
+
+  # JOB 2: Deep Static Analysis (SAST)
+  security_scan:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./frontend
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --debug --only-verified
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'javascript-typescript'
+          queries: security-extended,security-and-quality
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
