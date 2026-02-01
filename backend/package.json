@@ -33,7 +33,8 @@
     "format:write": "pnpm exec prettier --write '**/*.{ts,tsx,js,jsx,mjs,json,yaml,yml}'",
     "lint": "eslint .",
     "build": "tsc",
-    "dev": "tsx watch src/index.ts",
+    "seed": "tsx src/scripts/seed.ts",
+    "dev": "pnpm run seed && tsx watch src/index.ts",
     "test": "jest"
   }
 }
