@@ -6,25 +6,19 @@ const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "super-secret-key",
 );
 
-/**
- * Helper to validate path access based on JWT payload
- */
 function getRedirectPath(pathname: string, payload: JWTPayload): string | null {
   const userId = String(payload.userId);
   const role = payload.role as string;
 
-  // 1. Admin Protection
   if (pathname.startsWith("/admin") && role !== "ADMIN") {
     return "/";
   }
 
-  // 2. ID Spoofing Protection
   if (pathname.startsWith("/user/")) {
     const urlId = pathname.split("/")[2];
     if (urlId !== userId) return `/user/${userId}`;
   }
 
-  // 3. Auth Page Protection (redirect logged-in users away from login)
   if (pathname === "/authentication") {
     return role === "ADMIN" ? `/admin/${userId}` : `/user/${userId}`;
   }
