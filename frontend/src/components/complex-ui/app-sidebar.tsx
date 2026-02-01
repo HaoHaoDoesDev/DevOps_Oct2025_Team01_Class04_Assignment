@@ -22,14 +22,21 @@ import user from "@/config/user-routes";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
-const navData = [
-  {
-    title: "Tools",
-    items: [{ title: "Dashboard", route: "dashboard" }],
-  },
-];
+interface NavItem {
+  title: string;
+  route: string;
+}
 
-export function AdminAppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
+interface AdminAppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  navigation: NavGroup[];
+}
+
+export function AppSidebar({ navigation, ...props }: AdminAppSidebarProps) {
   const { userId, logout } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
@@ -53,16 +60,17 @@ export function AdminAppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             className="object-cover"
           />
         </SidebarHeader>
-
         <SidebarContent>
-          {navData.map((group) => (
+          {navigation.map((group) => (
             <SidebarGroup key={group.title}>
               <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {group.items.map((item) => {
                     const url =
-                      item.route === "dashboard" ? `/${userId}` : item.route;
+                      item.route === "dashboard"
+                        ? `/admin/${userId}`
+                        : item.route;
 
                     const isActive = pathname === url;
 
