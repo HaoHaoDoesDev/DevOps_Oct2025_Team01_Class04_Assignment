@@ -45,16 +45,20 @@ jobs:
           cd frontend
           pnpm run dev & 
           sleep 10
+      - name: Fix Workspace Permissions
+        run: chmod -R 777 .
 
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.10.0
         with:
           target: "http://localhost:3000"
-          cmd_options: '-r zap_report.pdf'
+          cmd_options: '-r zap_report.pdf -J report_json.json'
 
       - name: Upload DAST Security Report
         if: always() 
         uses: actions/upload-artifact@v4
         with:
           name: ZAP-Security-Report
-          path: zap_report.pdf
+          path: |
+            zap_report.pdf
+            report_json.json
