@@ -2,9 +2,9 @@ name: SAST - Static Code Analysis
 
 on:
   pull_request:
-  branches:
-      - main  
-  paths:
+    branches:
+      - main
+    paths:
       - "frontend/**"
       - "backend/**"
 

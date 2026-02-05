@@ -2,9 +2,9 @@ name: DAST - OWASP ZAP Scan
 
 on:
   pull_request:
-  branches:
-      - main  
-  paths:
+    branches:
+      - main
+    paths:
       - "frontend/**"
       - "backend/**"
 
