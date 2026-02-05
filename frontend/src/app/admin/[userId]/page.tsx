@@ -4,13 +4,6 @@ import { DataTable } from "@/components/ui/admin-table";
 import { DummyDataADminDashboard } from "./_components/dummy-table-data";
 import { UserManagementColumns } from "./_components/user-management-table-columns";
 
-export type AdminUser = {
-  id: string;
-  email: string;
-  filesUploaded: number;
-  status: "active" | "inactive";
-};
-
 export default function AdminDashboard() {
   return (
     <main className="p-8">

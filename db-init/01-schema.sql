@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS user_files CASCADE;
+
+DROP TABLE IF EXISTS users CASCADE;
+
+DROP FUNCTION IF EXISTS generate_unique_user_id CASCADE;
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(256) UNIQUE NOT NULL,
@@ -5,7 +11,7 @@ CREATE TABLE users (
     role VARCHAR(10) CHECK (role IN ('ADMIN', 'USER')) NOT NULL
 );
 
-CREATE TABLE user_files (
+CREATE TABLE IF NOT EXISTS user_files (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     file_name VARCHAR(255) NOT NULL,
