@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "frontend/**"
+      - ".github/workflows/**"
+      
 
 jobs:
   # JOB 1: Fast feedback for the developer (Lint, Build, Audit)
