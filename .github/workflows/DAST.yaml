@@ -37,13 +37,13 @@ jobs:
       - name: Start Backend API
         run: |
           cd backend
-          pnpm run start & 
+          pnpm run dev & 
           sleep 10
 
       - name: Start Frontend
         run: |
           cd frontend
-          pnpm run start & 
+          pnpm run dev & 
           sleep 10
 
       - name: Run OWASP ZAP Baseline Scan
