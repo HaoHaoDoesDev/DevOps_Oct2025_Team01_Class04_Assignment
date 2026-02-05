@@ -49,5 +49,5 @@ jobs:
         uses: zaproxy/action-baseline@v0.10.0
         with:
           target: "http://localhost:3000"
-          cmd_options: '-t "DAST scan for React/TS"'
+          cmd_options: '-t "http://localhost:3000" -r zap_report.html'
 
