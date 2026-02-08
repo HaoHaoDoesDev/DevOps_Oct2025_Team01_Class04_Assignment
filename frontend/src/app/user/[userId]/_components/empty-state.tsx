@@ -1,4 +1,4 @@
-import { ImageIcon } from 'lucide-react';
+import { ImageIcon } from "lucide-react";
 
 export default function EmptyState() {
   return (
@@ -10,7 +10,8 @@ export default function EmptyState() {
         No pictures yet
       </h3>
       <p className="text-gray-500 text-center max-w-md">
-        Upload your first image to get started. You can drag and drop files or click the upload area above.
+        Upload your first image to get started. You can drag and drop files or
+        click the upload area above.
       </p>
     </div>
   );

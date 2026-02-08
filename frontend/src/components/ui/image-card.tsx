@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import { Trash2 } from 'lucide-react';
+import Image from "next/image";
+import { Trash2 } from "lucide-react";
 
 interface ImageCardProps {
   id: string;
@@ -9,7 +9,13 @@ interface ImageCardProps {
   onDelete: (id: string) => void;
 }
 
-export default function ImageCard({ id, src, alt, uploadedAt, onDelete }: ImageCardProps) {
+export default function ImageCard({
+  id,
+  src,
+  alt,
+  uploadedAt,
+  onDelete,
+}: ImageCardProps) {
   return (
     <div className="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
       <div className="aspect-square relative overflow-hidden bg-gray-100">
@@ -21,7 +27,7 @@ export default function ImageCard({ id, src, alt, uploadedAt, onDelete }: ImageC
         />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />
       </div>
-      
+
       <div className="p-3 flex items-center justify-between">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate">{alt}</p>
@@ -29,7 +35,7 @@ export default function ImageCard({ id, src, alt, uploadedAt, onDelete }: ImageC
             {uploadedAt.toLocaleDateString()}
           </p>
         </div>
-        
+
         <button
           onClick={() => onDelete(id)}
           className="ml-2 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
