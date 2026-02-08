@@ -172,7 +172,6 @@ export default function UploadZone({ onUpload, userId }: UploadZoneProps) {
     }
   };
 
-  // FIX: Extracted nested ternary into a standalone helper
   const getStatusStyles = (status: FileStatus["status"]) => {
     switch (status) {
       case "success":

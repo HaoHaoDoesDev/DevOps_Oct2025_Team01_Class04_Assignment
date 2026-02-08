@@ -18,13 +18,11 @@ export default function DeleteConfirmModal({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-screen items-center justify-center p-4">
-        {/* Backdrop */}
         <div
           className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
 
-        {/* Modal */}
         <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6 z-10">
           <button
             onClick={onClose}
