@@ -23,13 +23,7 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "[GitHub] ${{ github.event_name }} on ${{ github.repository }}"
-          to: |
-            ER_Poi_Voon@np.edu.sg
-            s10255784@connect.np.edu.sg
-            s10257399@connect.np.edu.sg
-            s10257164@connect.np.edu.sg
-            s10257575@connect.np.edu.sg
-            s10262731@connect.np.edu.sg
+          to: ER_Poi_Voon@np.edu.sg, s10255784@connect.np.edu.sg, s10257399@connect.np.edu.sg, s10257164@connect.np.edu.sg, s10257575@connect.np.edu.sg, s10262731@connect.np.edu.sg
           from: DevOps Team 1 <devops.class4.team1.np@gmail.com>
           body: |
             GitHub Action Notification
