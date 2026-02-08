@@ -5,13 +5,8 @@ on:
     branches:
       - main
       - develop
-      - '**'  # All branches, or specify specific ones
   pull_request:
     types: [opened, closed, reopened, synchronize]
-  workflow_run:
-    workflows: ["*"]  # Trigger on any workflow completion
-    types:
-      - completed
 
 jobs:
   send-email-notification:
@@ -41,17 +36,15 @@ jobs:
             ==========================
             
             Repository: ${{ github.repository }}
-            Event: ${{ github.event_name }}
+            Event Type: ${{ github.event_name }}
             Branch: ${{ github.ref_name }}
-            Commit: ${{ github.sha }}
-            Actor: ${{ github.actor }}
+            Triggered by: ${{ github.actor }}
+            Commit SHA: ${{ github.sha }}
             
             Workflow: ${{ github.workflow }}
             Run Number: ${{ github.run_number }}
             
-            Status: ${{ job.status }}
-            
-            View Details: ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
+            View Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
             ---
             This is an automated message from GitHub Actions.
