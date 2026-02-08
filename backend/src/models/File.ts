@@ -31,6 +31,22 @@ export class FileModel {
 
     return data.publicUrl;
   }
+  static async getFilesByUserId(userId: number): Promise<UserFile[]> {
+    const sql = `
+      SELECT id, user_id, file_name, blob_url, file_size_bytes, upload_timestamp 
+      FROM user_files 
+      WHERE user_id = $1 
+      ORDER BY upload_timestamp DESC;
+    `;
+    
+    try {
+      const result = await db.query(sql, [userId]);
+      return result.rows;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Database Fetch Error";
+      throw new Error(`Failed to retrieve files: ${errorMessage}`);
+    }
+  }
 
   static async createRecord(fileData: UserFile): Promise<UserFile> {
     const sql = `
