@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import {
   Images,
   HardDrive,
@@ -14,7 +14,6 @@ import SearchBar from "@/components/ui/reusable-search";
 import EmptyState from "./_components/empty-state";
 import DeleteConfirmModal from "./_components/delete-photo-modal";
 import { useAuthStore } from "@/stores/user-store";
-import { ApiResponseImage } from "@/types/response-image";
 
 // Mock data type
 interface ImageData {
@@ -22,58 +21,23 @@ interface ImageData {
   src: string;
   alt: string;
   uploadedAt: Date;
-  size: number; // in bytes
+  size: number;
+}
+
+interface UploadedFileRecord {
+  id: number;
+  user_id: number;
+  file_name: string;
+  blob_url: string;
+  file_size_bytes: number;
+  upload_timestamp: string;
 }
 
 export default function UserDashboard() {
   const { userId } = useAuthStore();
   const [images, setImages] = useState<ImageData[]>([]);
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      if (!userId) return;
-      try {
-        const response = await fetch(
-          `http://localhost:8080/api/files/user/${userId}`,
-        );
-
-        if (!response.ok) {
-          throw new Error(`Server responded with status: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        const rawData: ApiResponseImage[] = result.data || [];
-
-        const formatted: ImageData[] = rawData.map((img) => ({
-          id: img.id.toString(),
-          src: img.blob_url,
-          alt: img.file_name,
-          uploadedAt: new Date(img.upload_timestamp),
-          size: img.file_size_bytes,
-        }));
-
-        setImages(formatted);
-      } catch (err) {
-        console.error("Failed to fetch images", err);
-      }
-    };
-    fetchImages();
-  }, [userId]);
-
-  const handleUploadFinished = (newUploadedRecords: ApiResponseImage[]) => {
-    const newImages: ImageData[] = newUploadedRecords.map((record) => ({
-      id: record.id.toString(),
-      src: record.blob_url,
-      alt: record.file_name,
-      uploadedAt: new Date(record.upload_timestamp),
-      size: record.file_size_bytes,
-    }));
-
-    setImages((prev) => [...newImages, ...prev]);
-  };
-
   const [searchQuery, setSearchQuery] = useState("");
+  
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     imageId: string;
@@ -83,6 +47,18 @@ export default function UserDashboard() {
     imageId: "",
     imageName: "",
   });
+
+  const handleUploadFinished = (uploadedRecords: UploadedFileRecord[]) => {
+  const newImages: ImageData[] = uploadedRecords.map((record) => ({
+    id: record.id.toString(),
+    src: record.blob_url,
+    alt: record.file_name,
+    uploadedAt: new Date(record.upload_timestamp),
+    size: record.file_size_bytes,
+  }));
+
+  setImages((prev) => [...newImages, ...prev]);
+};
 
   // Filter images based on search
   const filteredImages = useMemo(() => {
@@ -94,20 +70,20 @@ export default function UserDashboard() {
 
   // Calculate stats
   const stats = useMemo(() => {
-    const totalSize = images.reduce((acc, img) => acc + img.size, 0);
-    const totalSizeGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);
-    const currentTime = new Date().getTime();
+  const totalSize = images.reduce((acc, img) => acc + img.size, 0);
+  const totalSizeGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);
+  const currentTime = new Date().getTime();
 
-    return {
-      totalImages: images.length,
-      totalSize: totalSizeGB,
-      recentUploads: images.filter((img) => {
-        const daysDiff =
-          (currentTime - img.uploadedAt.getTime()) / (1000 * 60 * 60 * 24);
-        return daysDiff <= 7;
-      }).length,
-    };
-  }, [images]);
+  return {
+    totalImages: images.length,
+    totalSize: totalSizeGB,
+    recentUploads: images.filter((img) => {
+      const daysDiff =
+        (currentTime - img.uploadedAt.getTime()) / (1000 * 60 * 60 * 24);
+      return daysDiff <= 7;
+    }).length,
+  };
+}, [images]);
 
   // Handle delete
   const handleDeleteClick = (id: string) => {
