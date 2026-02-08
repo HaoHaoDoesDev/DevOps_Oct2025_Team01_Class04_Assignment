@@ -1,0 +1,57 @@
+name: Email Notification on CI/CD Events
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - '**'  # All branches, or specify specific ones
+  pull_request:
+    types: [opened, closed, reopened, synchronize]
+  workflow_run:
+    workflows: ["*"]  # Trigger on any workflow completion
+    types:
+      - completed
+
+jobs:
+  send-email-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "[GitHub] ${{ github.event_name }} on ${{ github.repository }}"
+          to: |
+            ER_Poi_Voon@np.edu.sg
+            s10255784@connect.np.edu.sg
+            s10257399@connect.np.edu.sg
+            s10257164@connect.np.edu.sg
+            s10257575@connect.np.edu.sg
+            s10262731@connect.np.edu.sg
+          from: DevOps Team 1 <devops.class4.team1.np@gmail.com>
+          body: |
+            GitHub Action Notification
+            ==========================
+            
+            Repository: ${{ github.repository }}
+            Event: ${{ github.event_name }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Actor: ${{ github.actor }}
+            
+            Workflow: ${{ github.workflow }}
+            Run Number: ${{ github.run_number }}
+            
+            Status: ${{ job.status }}
+            
+            View Details: ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
+            
+            ---
+            This is an automated message from GitHub Actions.
