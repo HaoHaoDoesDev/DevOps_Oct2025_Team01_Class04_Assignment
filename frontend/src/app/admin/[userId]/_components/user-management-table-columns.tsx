@@ -1,7 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AdminUser } from "./dummy-table-data";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { User } from "@/types/user";
 
-export const UserManagementColumns: ColumnDef<AdminUser>[] = [
+export const UserManagementColumns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
     header: "User ID",
@@ -19,10 +19,6 @@ export const UserManagementColumns: ColumnDef<AdminUser>[] = [
   {
     accessorKey: "email",
     header: "User Email",
-  },
-  {
-    accessorKey: "filesUploaded",
-    header: "Files Uploaded",
   },
   {
     id: "actions",

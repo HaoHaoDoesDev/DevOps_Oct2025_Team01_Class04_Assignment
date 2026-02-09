@@ -17,7 +17,6 @@ export default function AdminLayout({
 }) {
   const { userId } = useAuthStore();
 
-  // Define admin-specific navigation here
   const adminNavigation = [
     {
       title: "Tools",
@@ -28,6 +27,15 @@ export default function AdminLayout({
         },
       ],
     },
+    {
+      title: "System",
+      items: [
+        {
+          title: "Program Logs",
+          route: userId ? userRoutes.systemLogs(userId) : "#",
+        },
+      ],
+    }
   ];
 
   return (
