@@ -102,5 +102,26 @@ export class FileModel {
       throw new Error(`Failed to find file record: ${errorMessage}`);
     }
   }
+  static async deleteFileRecord(fileId: number, userId: number): Promise<string | null> {
+    const sql = `
+      DELETE FROM user_files 
+      WHERE id = $1 AND user_id = $2 
+      RETURNING blob_url;
+    `;
+    try {
+      const result = await db.query(sql, [fileId, userId]);
+      return result.rows.length > 0 ? result.rows[0].blob_url : null;
+    } catch (error) {
+      throw new Error("Failed to delete file from database");
+    }
+  }
+
+  static async deleteFromBucket(filePath: string): Promise<void> {
+    const { error } = await supabase.storage
+      .from("user_uploads")
+      .remove([filePath]);
+
+    if (error) throw new Error(`Bucket deletion failed: ${error.message}`);
+  }
 }
 
