@@ -66,7 +66,6 @@ export class FileModel {
       const result = await db.query(sql, values);
       return result.rows[0];
     } catch (error: unknown) {
-      // FIX: Extract the message safely, then ALWAYS throw
       const errorMessage = error instanceof Error ? error.message : "Unknown Database Error";
       throw new Error(`Database Insert Failed: ${errorMessage}`);
     }

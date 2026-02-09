@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: devops_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-mvp_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-mvp_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  admin-service:
+    build:
+      context: .
+      dockerfile: services/admin-service/Dockerfile
+    container_name: admin_api
+    ports:
+      - "5001:5001"
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PORT=5001
+      - DB_HOST=db
+
+  user-service:
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile
+    container_name: user_api
+    ports:
+      - "5002:5002"
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PORT=5002
+      - DB_HOST=db
+
+volumes:
+  postgres_data:

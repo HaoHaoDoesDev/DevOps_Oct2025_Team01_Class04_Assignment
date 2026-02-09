@@ -1,0 +1,13 @@
+{
+  "name": "devops-assg-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm tsc --build",
+    "dev": "pnpm --filter \"*\" dev",
+    "docker:up": "docker compose up --build"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

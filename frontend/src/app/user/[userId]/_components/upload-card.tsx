@@ -89,7 +89,7 @@ export default function UploadZone({ onUpload, userId }: UploadZoneProps) {
     formData.append("file", file);
     formData.append("user_id", userId.toString());
 
-    const response = await fetch("http://localhost:8080/api/files/upload", {
+    const response = await fetch("http://localhost:5002/api/files/upload", {
       method: "POST",
       body: formData,
     });
