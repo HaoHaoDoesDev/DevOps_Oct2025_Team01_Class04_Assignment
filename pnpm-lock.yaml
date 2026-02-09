@@ -6,6 +6,15 @@ settings:
 
 importers:
 
+  .:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.33
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   frontend:
     dependencies:
       '@hookform/resolvers':
