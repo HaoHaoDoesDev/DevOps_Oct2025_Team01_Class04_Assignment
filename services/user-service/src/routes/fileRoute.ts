@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { FileController } from "../controllers/file-controller.js";
+import { authenticateToken } from "../middleware/auth-middleware.js";
 
 const router: Router = Router();
 
@@ -28,6 +29,6 @@ const upload = multer({
   },
 });
 
-router.post("/upload", upload.single("file"), FileController.uploadFile);
-
+router.post("/upload",authenticateToken, upload.single("file"), FileController.uploadFile);
+router.get("/download/:fileId", authenticateToken, FileController.downloadFile);
 export default router;

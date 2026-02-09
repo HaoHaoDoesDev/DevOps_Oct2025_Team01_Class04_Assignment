@@ -70,4 +70,37 @@ export class FileModel {
       throw new Error(`Database Insert Failed: ${errorMessage}`);
     }
   }
+
+  static async downloadFromBucket(filePath: string): Promise<Buffer> {
+  const { data, error } = await supabase.storage
+    .from("user_uploads")
+    .download(filePath);
+
+  if (error) throw new Error(`Download failed: ${error.message}`);
+  
+  const arrayBuffer = await data.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+  }
+
+  static async getFileByIdAndUser(fileId: number, userId: number): Promise<UserFile | null> {
+    const sql = `
+      SELECT id, user_id, file_name, blob_url, file_size_bytes, upload_timestamp 
+      FROM user_files 
+      WHERE id = $1 AND user_id = $2;
+    `;
+
+    try {
+      const result = await db.query(sql, [fileId, userId]);
+      
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      return result.rows[0];
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Database Fetch Error";
+      throw new Error(`Failed to find file record: ${errorMessage}`);
+    }
+  }
 }
+
