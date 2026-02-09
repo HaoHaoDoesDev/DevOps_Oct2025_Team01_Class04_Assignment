@@ -5,10 +5,21 @@ import { db } from "./config/db.js";
 import authRoutes from "./routes/auth-routes.js";
 import { authorizeAdmin } from "./middleware/role-middleware.js";
 import * as UserModel from "./models/User.js";
+import rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests from this IP, please try again after 15 minutes',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+app.use(limiter);
 app.use(cors());
 app.use(express.json());
 
