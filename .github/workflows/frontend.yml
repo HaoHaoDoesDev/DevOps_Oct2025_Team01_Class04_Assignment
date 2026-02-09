@@ -1,10 +1,7 @@
 name: Frontend CI
 
 on:
-  pull_request:
-    paths:
-      - "frontend/**"
-      - ".github/workflows/**"
+  workflow_call:
       
 
 jobs:

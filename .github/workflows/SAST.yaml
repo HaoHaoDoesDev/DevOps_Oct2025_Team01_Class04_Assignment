@@ -1,13 +1,7 @@
 name: SAST - Static Code Analysis
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "frontend/**"
-      - "services/**"
-      - ".github/workflows/sast.yml"
+  workflow_call:
 
 jobs:
   sast_scan:

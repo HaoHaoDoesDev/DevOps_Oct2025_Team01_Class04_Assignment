@@ -1,0 +1,49 @@
+name: CI/CD Master Pipeline
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  
+jobs:
+  backend:
+    uses: ./.github/workflows/backend.yml
+  frontend:
+    uses: ./.github/workflows/frontend.yml
+  sast:
+    uses: ./.github/workflows/SAST.yaml
+  dast:
+    uses: ./.github/workflows/DAST.yaml
+  sca:
+    uses: ./.github/workflows/SCA.yaml
+
+  send-email-notification:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend, sast, dast, sca]
+    if: always() # This ensures the email sends even if one check fails
+    steps:
+      - name: Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "[DevOps Report] CI/CD Pipeline Results"
+          to: ER_Poi_Voon@np.edu.sg, lucastoh06@gmail.com, lucas.yeo69@gmail.com, chenjy0142@gmail.com, lim06@gmail.com, s10257575@connect.np.edu.sg, ongjunhao2609@gmail.com
+          from: DevOps Team 1
+          body: |
+            CI/CD Pipeline Report for ${{ github.repository }}
+            =================================================
+            Status Results:
+            - Backend CI: ${{ needs.backend.result }}
+            - Frontend CI: ${{ needs.frontend.result }}
+            - SAST (CodeQL): ${{ needs.sast.result }}
+            - DAST (ZAP): ${{ needs.dast.result }}
+            - SCA (Dependencies): ${{ needs.sca.result }}
+            
+            View full details here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

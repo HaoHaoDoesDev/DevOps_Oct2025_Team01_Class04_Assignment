@@ -1,13 +1,7 @@
 name: SCA - Dependency Vulnerability Scan
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "frontend/**"
-      - "backend/**"
-      - ".github/workflows/**"
+  workflow_call:
 
 jobs:
   sca_scan:
