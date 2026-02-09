@@ -12,7 +12,6 @@ export class FileController {
         return;
       }
       const userId = req.body.user_id;
-      console.log("User ID from Token:", userId);
 
       const publicUrl = await FileModel.uploadToBucket(userId, req.file);
       const savedRecord = await FileModel.createRecord({
@@ -32,11 +31,7 @@ static async downloadFile(req: Request, res: Response, next: NextFunction): Prom
     const { fileId } = req.params;
     const userId = req.body.user_id;
 
-    console.log("Requested File ID:", fileId);
-    console.log("User ID from Token:", userId);
-
     const fileRecord = await FileModel.getFileByIdAndUser(Number(fileId), userId);
-    console.log("Database Result:", fileRecord);
 
     if (!fileRecord) {
       res.status(404).json({ error: "File not found or unauthorized" });
