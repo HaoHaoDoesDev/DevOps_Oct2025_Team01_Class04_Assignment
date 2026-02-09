@@ -29,3 +29,15 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
+
+export const createUser = async (email: string, passwordHash: string, role: string) => {
+  const query = "INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3) RETURNING id, email, role";
+  const { rows } = await db.query(query, [email, passwordHash, role]);
+  return rows[0];
+};
+
+export const deleteUserById = async (id: number) => {
+  const query = "DELETE FROM users WHERE id = $1 RETURNING id";
+  const { rows } = await db.query(query, [id]);
+  return rows[0]; 
+};
