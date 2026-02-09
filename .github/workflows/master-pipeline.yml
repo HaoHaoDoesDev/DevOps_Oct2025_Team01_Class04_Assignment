@@ -10,11 +10,11 @@ jobs:
   frontend:
     uses: ./.github/workflows/frontend.yml
   sast:
-    uses: ./.github/workflows/SAST.yml
+    uses: ./.github/workflows/SAST.yaml
   dast:
-    uses: ./.github/workflows/DAST.yml
+    uses: ./.github/workflows/DAST.yaml
   sca:
-    uses: ./.github/workflows/SCA.yml
+    uses: ./.github/workflows/SCA.yaml
 
   send-email-notification:
     runs-on: ubuntu-latest
