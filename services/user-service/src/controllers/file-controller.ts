@@ -11,7 +11,7 @@ export class FileController {
         res.status(400).json({ error: "No file provided" });
         return;
       }
-      const userId = req.body.user_id;
+      const userId = (req as any).user.userId;
 
       const publicUrl = await FileModel.uploadToBucket(userId, req.file);
       const savedRecord = await FileModel.createRecord({
@@ -29,7 +29,7 @@ export class FileController {
 static async downloadFile(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { fileId } = req.params;
-    const userId = req.body.user_id;
+    const userId = (req as any).user.userId;
 
     const fileRecord = await FileModel.getFileByIdAndUser(Number(fileId), userId);
 
@@ -47,6 +47,29 @@ static async downloadFile(req: Request, res: Response, next: NextFunction): Prom
     res.setHeader("Content-Type", "application/octet-stream");
     
     res.send(fileBuffer);
+  } catch (error) {
+    next(error);
+  }
+}
+
+static async deleteFile(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const { fileId } = req.params;
+    const userId = (req as any).user.userId;
+
+    const blobUrl = await FileModel.deleteFileRecord(Number(fileId), userId);
+
+    if (!blobUrl) {
+      res.status(404).json({ error: "File not found or unauthorized" });
+      return;
+    }
+
+    const rawPath = blobUrl.split('/user_uploads/')[1];
+    const path = decodeURIComponent(rawPath);
+    
+    await FileModel.deleteFromBucket(path);
+
+    res.status(200).json({ message: "File deleted successfully" });
   } catch (error) {
     next(error);
   }
