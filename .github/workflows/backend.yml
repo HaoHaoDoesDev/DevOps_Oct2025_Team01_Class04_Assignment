@@ -5,6 +5,7 @@ on:
     paths:
       - "services/**"
       - ".github/workflows/backend-ci.yml"
+  workflow_call:
 
 jobs:
   backend_check:

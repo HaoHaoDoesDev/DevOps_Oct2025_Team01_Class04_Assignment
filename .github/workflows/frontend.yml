@@ -5,6 +5,7 @@ on:
     paths:
       - "frontend/**"
       - ".github/workflows/**"
+  workflow_call:
       
 
 jobs:

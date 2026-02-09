@@ -8,6 +8,7 @@ on:
       - "frontend/**"
       - "services/**"
       - ".github/workflows/sast.yml"
+  workflow_call:
 
 jobs:
   sast_scan:
