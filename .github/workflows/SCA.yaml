@@ -1,0 +1,41 @@
+name: SCA - Dependency Vulnerability Scan
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - "backend/**"
+      - ".github/workflows/**"
+
+jobs:
+  sca_scan:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        run: cd backend && pnpm install --frozen-lockfile
+
+      - name: Install frontend dependencies
+        run: cd frontend && pnpm install --frozen-lockfile
+
+      - name: Run Dependency Audit (SCA)
+        run: |
+          cd backend && pnpm audit --prod --audit-level=high
+          cd ../frontend && pnpm audit --prod --audit-level=high
+

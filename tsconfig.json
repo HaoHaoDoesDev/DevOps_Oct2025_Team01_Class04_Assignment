@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "module": "NodeNext",
+    "target": "ESNext",
+    "moduleResolution": "NodeNext"
+  },
+  "files": [],
+  "references": [
+    { "path": "./services/admin-service" },
+    { "path": "./services/user-service" }
+  ]
+}
