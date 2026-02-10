@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Edit } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -41,8 +41,8 @@ export const UserManagementColumns: ColumnDef<User>[] = [
               onClick={() => console.log("Editing user:", user.id)}
               className="cursor-pointer"
             >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit User
+              <Trash className="mr-2 h-4 w-4" />
+              Delete User
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
