@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Images,
   HardDrive,
@@ -14,6 +14,9 @@ import SearchBar from "@/components/ui/reusable-search";
 import EmptyState from "./_components/empty-state";
 import DeleteConfirmModal from "./_components/delete-photo-modal";
 import { useAuthStore } from "@/stores/user-store";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+
 
 interface ImageData {
   id: string;
@@ -36,6 +39,41 @@ export default function UserDashboard() {
   const { userId } = useAuthStore();
   const [images, setImages] = useState<ImageData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const fetchUserImages = useCallback(async () => {
+  const token = Cookies.get("token");
+  if (!token) return;
+
+  try {
+    const response = await fetch("http://localhost:5002/dashboard/", {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch images");
+
+    const result = await response.json();
+    
+    const mappedImages: ImageData[] = result.data.map((record: UploadedFileRecord) => ({
+      id: record.id.toString(),
+      src: record.blob_url,
+      alt: record.file_name,
+      uploadedAt: new Date(record.upload_timestamp),
+      size: record.file_size_bytes,
+    }));
+
+    setImages(mappedImages);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unexpected error occurred";
+      toast.error(message);
+      console.error("Delete error:", error);
+  }
+}, []);
+
+useEffect(() => {
+  fetchUserImages();
+}, [fetchUserImages]);
 
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
@@ -68,35 +106,53 @@ export default function UserDashboard() {
 
   const stats = useMemo(() => {
     const totalSize = images.reduce((acc, img) => acc + img.size, 0);
-    const totalSizeGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);
+    const formatSize = (bytes: number) => {
+      if (bytes === 0) return "0 MB";
+      const mb = bytes / (1024 * 1024);
+      if (mb < 1024) return `${mb.toFixed(2)} MB`;
+      return `${(mb / 1024).toFixed(2)} MB`;
+    };
     const currentTime = new Date().getTime();
 
     return {
       totalImages: images.length,
-      totalSize: totalSizeGB,
+      totalSize: formatSize(totalSize),
       recentUploads: images.filter((img) => {
-        const daysDiff =
-          (currentTime - img.uploadedAt.getTime()) / (1000 * 60 * 60 * 24);
+        const daysDiff = (currentTime - img.uploadedAt.getTime()) / (1000 * 60 * 60 * 24);
         return daysDiff <= 7;
       }).length,
     };
   }, [images]);
 
-  const handleDeleteClick = (id: string) => {
-    const image = images.find((img) => img.id === id);
-    if (image) {
-      setDeleteModal({
-        isOpen: true,
-        imageId: id,
-        imageName: image.alt,
-      });
-    }
-  };
+  const handleDeleteConfirm = async () => {
+  const token = Cookies.get("token");
+  const imageId = deleteModal.imageId;
 
-  const handleDeleteConfirm = () => {
-    setImages((prev) => prev.filter((img) => img.id !== deleteModal.imageId));
-    console.log("Deleted image:", deleteModal.imageId);
-  };
+  if (!token || !imageId) return;
+
+  try {
+    const response = await fetch(`http://localhost:5002/dashboard/delete/${imageId}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to delete file");
+    }
+
+    setImages((prev) => prev.filter((img) => img.id !== imageId));
+
+    setDeleteModal({ isOpen: false, imageId: "", imageName: "" });
+    
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unexpected error occurred";
+      toast.error(message);
+      console.error("Delete error:", error);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -123,7 +179,7 @@ export default function UserDashboard() {
           />
           <StatsCard
             title="Storage Used"
-            value={`${stats.totalSize} GB`}
+            value={`${stats.totalSize}`}
             icon={HardDrive}
             color="green"
           />
@@ -159,7 +215,7 @@ export default function UserDashboard() {
                 src={image.src}
                 alt={image.alt}
                 uploadedAt={image.uploadedAt}
-                onDelete={handleDeleteClick}
+                onDelete={handleDeleteConfirm}
               />
             ))}
           </div>
