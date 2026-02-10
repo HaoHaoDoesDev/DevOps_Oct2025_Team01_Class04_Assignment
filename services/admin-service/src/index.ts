@@ -41,7 +41,7 @@ app.get("/users", authorizeAdmin, async (req, res) => {
 const start = async () => {
   try {
     await db.query("SELECT NOW()");
-    console.log("✅ Admin Service: Database connected");
+    console.log("Admin Service: Database connected");
     app.listen(PORT, () => {
       console.log(`Admin Service listening on port ${PORT}`);
     });

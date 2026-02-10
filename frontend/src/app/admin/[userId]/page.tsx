@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/admin-table";
 import { UserManagementColumns } from "./_components/user-management-table-columns";
 import { User } from "@/types/user";
+import Cookies from "js-cookie";
 
 export default function AdminDashboard() {
+  const token = Cookies.get("token");
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -14,7 +16,7 @@ export default function AdminDashboard() {
       try {
         const response = await fetch("http://localhost:5001/users", {
           headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -30,7 +32,7 @@ export default function AdminDashboard() {
     };
 
     fetchUsers();
-  }, []);
+  }, [token]);
 
   return (
     <main className="p-8">
