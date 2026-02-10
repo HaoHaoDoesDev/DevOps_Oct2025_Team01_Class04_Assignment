@@ -85,6 +85,17 @@ useEffect(() => {
     imageName: "",
   });
 
+  const handleDeleteClick = (id: string) => {
+    const image = images.find((img) => img.id === id);
+    if (image) {
+      setDeleteModal({
+        isOpen: true,
+        imageId: id,
+        imageName: image.alt,
+      });
+    }
+  };
+
   const handleUploadFinished = (uploadedRecords: UploadedFileRecord[]) => {
     const newImages: ImageData[] = uploadedRecords.map((record) => ({
       id: record.id.toString(),
@@ -209,15 +220,15 @@ useEffect(() => {
         {filteredImages.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredImages.map((image) => (
-              <ImageCard
-                key={image.id}
-                id={image.id}
-                src={image.src}
-                alt={image.alt}
-                uploadedAt={image.uploadedAt}
-                onDelete={handleDeleteConfirm}
-              />
-            ))}
+            <ImageCard
+              key={image.id}
+              id={image.id}
+              src={image.src}
+              alt={image.alt}
+              uploadedAt={image.uploadedAt}
+              onDelete={handleDeleteClick}
+            />
+          ))}
           </div>
         ) : (
           <>
