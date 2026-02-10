@@ -94,7 +94,7 @@ export default function UploadZone({ onUpload, userId }: UploadZoneProps) {
     const response = await fetch("http://localhost:5002/dashboard/upload", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: formData,
     });

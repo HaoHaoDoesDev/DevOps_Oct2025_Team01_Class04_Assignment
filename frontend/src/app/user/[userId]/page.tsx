@@ -17,7 +17,6 @@ import { useAuthStore } from "@/stores/user-store";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
-
 interface ImageData {
   id: string;
   src: string;
@@ -41,38 +40,41 @@ export default function UserDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const fetchUserImages = useCallback(async () => {
-  const token = Cookies.get("token");
-  if (!token) return;
+    const token = Cookies.get("token");
+    if (!token) return;
 
-  try {
-    const response = await fetch("http://localhost:5002/dashboard/", {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      },
-    });
+    try {
+      const response = await fetch("http://localhost:5002/dashboard/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    if (!response.ok) throw new Error("Failed to fetch images");
+      if (!response.ok) throw new Error("Failed to fetch images");
 
-    const result = await response.json();
-    
-    const mappedImages: ImageData[] = result.data.map((record: UploadedFileRecord) => ({
-      id: record.id.toString(),
-      src: record.blob_url,
-      alt: record.file_name,
-      uploadedAt: new Date(record.upload_timestamp),
-      size: record.file_size_bytes,
-    }));
-    setImages(mappedImages);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "An unexpected error occurred";
+      const result = await response.json();
+
+      const mappedImages: ImageData[] = result.data.map(
+        (record: UploadedFileRecord) => ({
+          id: record.id.toString(),
+          src: record.blob_url,
+          alt: record.file_name,
+          uploadedAt: new Date(record.upload_timestamp),
+          size: record.file_size_bytes,
+        }),
+      );
+      setImages(mappedImages);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An unexpected error occurred";
       toast.error(message);
       console.error("Delete error:", error);
-  }
-}, []);
+    }
+  }, []);
 
-useEffect(() => {
-  fetchUserImages();
-}, [fetchUserImages]);
+  useEffect(() => {
+    fetchUserImages();
+  }, [fetchUserImages]);
 
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
@@ -128,41 +130,45 @@ useEffect(() => {
       totalImages: images.length,
       totalSize: formatSize(totalSize),
       recentUploads: images.filter((img) => {
-        const daysDiff = (currentTime - img.uploadedAt.getTime()) / (1000 * 60 * 60 * 24);
+        const daysDiff =
+          (currentTime - img.uploadedAt.getTime()) / (1000 * 60 * 60 * 24);
         return daysDiff <= 7;
       }).length,
     };
   }, [images]);
 
   const handleDeleteConfirm = async () => {
-  const token = Cookies.get("token");
-  const imageId = deleteModal.imageId;
+    const token = Cookies.get("token");
+    const imageId = deleteModal.imageId;
 
-  if (!token || !imageId) return;
+    if (!token || !imageId) return;
 
-  try {
-    const response = await fetch(`http://localhost:5002/dashboard/delete/${imageId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      },
-    });
+    try {
+      const response = await fetch(
+        `http://localhost:5002/dashboard/delete/${imageId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to delete file");
-    }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete file");
+      }
 
-    setImages((prev) => prev.filter((img) => img.id !== imageId));
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
 
-    setDeleteModal({ isOpen: false, imageId: "", imageName: "" });
-    
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "An unexpected error occurred";
+      setDeleteModal({ isOpen: false, imageId: "", imageName: "" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An unexpected error occurred";
       toast.error(message);
       console.error("Delete error:", error);
-  }
-};
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -219,15 +225,15 @@ useEffect(() => {
         {filteredImages.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredImages.map((image) => (
-            <ImageCard
-              key={image.id}
-              id={image.id}
-              src={image.src}
-              alt={image.alt}
-              uploadedAt={image.uploadedAt}
-              onDelete={handleDeleteClick}
-            />
-          ))}
+              <ImageCard
+                key={image.id}
+                id={image.id}
+                src={image.src}
+                alt={image.alt}
+                uploadedAt={image.uploadedAt}
+                onDelete={handleDeleteClick}
+              />
+            ))}
           </div>
         ) : (
           <>
