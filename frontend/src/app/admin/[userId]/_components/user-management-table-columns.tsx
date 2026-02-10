@@ -1,7 +1,8 @@
+"use client";
+
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Edit } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AdminUser } from "./dummy-table-data";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { User } from "@/types/user";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
-export const UserManagementColumns: ColumnDef<AdminUser>[] = [
+export const getUserColumns = (
+  onUserDeleted: () => void,
+): ColumnDef<User>[] => [
   {
     accessorKey: "id",
     header: "User ID",
@@ -21,14 +27,42 @@ export const UserManagementColumns: ColumnDef<AdminUser>[] = [
     header: "User Email",
   },
   {
-    accessorKey: "filesUploaded",
-    header: "Files Uploaded",
+    accessorKey: "role",
+    header: "Role",
   },
   {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
       const user = row.original;
+      const token = Cookies.get("token");
+
+      const handleDelete = async () => {
+        if (!confirm(`Are you sure you want to delete ${user.email}?`)) return;
+        try {
+          const response = await fetch(
+            `http://localhost:5001/users/${user.id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to delete user");
+          }
+
+          toast.success("User deleted successfully");
+          onUserDeleted();
+        } catch (error: unknown) {
+          const message =
+            error instanceof Error ? error.message : "Error deleting user";
+          toast.error(message);
+        }
+      };
 
       return (
         <DropdownMenu>
@@ -42,11 +76,11 @@ export const UserManagementColumns: ColumnDef<AdminUser>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => console.log("Editing user:", user.id)}
-              className="cursor-pointer"
+              onClick={handleDelete}
+              className="cursor-pointer text-red-600 focus:text-red-600"
             >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit User
+              <Trash className="mr-2 h-4 w-4" />
+              Delete User
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
