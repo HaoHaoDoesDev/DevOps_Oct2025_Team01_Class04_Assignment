@@ -15,7 +15,6 @@ import EmptyState from "./_components/empty-state";
 import DeleteConfirmModal from "./_components/delete-photo-modal";
 import { useAuthStore } from "@/stores/user-store";
 
-// Mock data type
 interface ImageData {
   id: string;
   src: string;
@@ -60,7 +59,6 @@ export default function UserDashboard() {
     setImages((prev) => [...newImages, ...prev]);
   };
 
-  // Filter images based on search
   const filteredImages = useMemo(() => {
     if (!searchQuery) return images;
     return images.filter((img) =>
@@ -68,7 +66,6 @@ export default function UserDashboard() {
     );
   }, [images, searchQuery]);
 
-  // Calculate stats
   const stats = useMemo(() => {
     const totalSize = images.reduce((acc, img) => acc + img.size, 0);
     const totalSizeGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);
@@ -85,7 +82,6 @@ export default function UserDashboard() {
     };
   }, [images]);
 
-  // Handle delete
   const handleDeleteClick = (id: string) => {
     const image = images.find((img) => img.id === id);
     if (image) {
@@ -104,7 +100,6 @@ export default function UserDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
@@ -119,7 +114,6 @@ export default function UserDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatsCard
             title="Total Images"
@@ -141,10 +135,8 @@ export default function UserDashboard() {
           />
         </div>
 
-        {/* Upload Zone */}
         <UploadZone onUpload={handleUploadFinished} userId={userId || 0} />
 
-        {/* Search and Filter */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-900">
