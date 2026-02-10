@@ -35,7 +35,7 @@ export default function AdminLayout({
           route: userId ? userRoutes.systemLogs(userId) : "#",
         },
       ],
-    }
+    },
   ];
 
   return (

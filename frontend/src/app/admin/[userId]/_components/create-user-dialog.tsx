@@ -33,7 +33,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createUserSchema, CreateUserFormValues } from "@/schema/admin/create-user";
+import {
+  createUserSchema,
+  CreateUserFormValues,
+} from "@/schema/admin/create-user";
 
 interface AddUserDialogProps {
   onUserAdded: () => void;
@@ -57,7 +60,7 @@ export function AddUserDialog({ onUserAdded }: AddUserDialogProps) {
       const response = await fetch("http://localhost:5001/users", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
@@ -65,17 +68,17 @@ export function AddUserDialog({ onUserAdded }: AddUserDialogProps) {
 
       const result = await response.json();
 
-      if (!response.ok) throw new Error(result.message || "Failed to create user");
+      if (!response.ok)
+        throw new Error(result.message || "Failed to create user");
 
       toast.success("User created successfully");
       form.reset();
       setOpen(false);
       onUserAdded();
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : "An unexpected error occurred";
-      
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+
       toast.error(errorMessage);
     }
   };
@@ -128,7 +131,10 @@ export function AddUserDialog({ onUserAdded }: AddUserDialogProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a role" />
