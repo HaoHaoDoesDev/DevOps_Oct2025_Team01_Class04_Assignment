@@ -62,7 +62,6 @@ export default function UserDashboard() {
       uploadedAt: new Date(record.upload_timestamp),
       size: record.file_size_bytes,
     }));
-
     setImages(mappedImages);
   } catch (error) {
     const message = error instanceof Error ? error.message : "An unexpected error occurred";

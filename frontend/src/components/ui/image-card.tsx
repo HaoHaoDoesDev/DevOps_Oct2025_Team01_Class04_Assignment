@@ -23,9 +23,9 @@ export default function ImageCard({
           src={src}
           alt={alt}
           fill
+          priority
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />
       </div>
 
       <div className="p-3 flex items-center justify-between">
