@@ -74,4 +74,20 @@ static async deleteFile(req: Request, res: Response, next: NextFunction): Promis
     next(error);
   }
 }
+
+static async getAllFiles(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const userId = (req as any).user.userId;
+
+    const files = await FileModel.getFilesByUserId(userId);
+
+    res.status(200).json({
+      message: "Files retrieved successfully",
+      count: files.length,
+      data: files 
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 }

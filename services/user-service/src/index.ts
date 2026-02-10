@@ -14,7 +14,7 @@ const fileRateLimiter = rateLimit({
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/files", fileRateLimiter, fileRoutes);
+app.use("/dashboard", fileRateLimiter, fileRoutes);
 
 const start = async () => {
   try {
