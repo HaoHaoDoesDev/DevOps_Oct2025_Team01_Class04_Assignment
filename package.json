@@ -5,7 +5,7 @@
     "build": "pnpm tsc --build",
     "dev": "pnpm --filter \"*\" dev",
     "docker:up": "docker compose up --build",
-    "test": "jest"
+    "test": "jest tests/"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
