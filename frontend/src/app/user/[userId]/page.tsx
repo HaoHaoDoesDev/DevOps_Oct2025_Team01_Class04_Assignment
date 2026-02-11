@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Images,
   HardDrive,
@@ -14,8 +14,9 @@ import SearchBar from "@/components/ui/reusable-search";
 import EmptyState from "./_components/empty-state";
 import DeleteConfirmModal from "./_components/delete-photo-modal";
 import { useAuthStore } from "@/stores/user-store";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
-// Mock data type
 interface ImageData {
   id: string;
   src: string;
@@ -38,6 +39,43 @@ export default function UserDashboard() {
   const [images, setImages] = useState<ImageData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchUserImages = useCallback(async () => {
+    const token = Cookies.get("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch("http://localhost:5002/dashboard/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch images");
+
+      const result = await response.json();
+
+      const mappedImages: ImageData[] = result.data.map(
+        (record: UploadedFileRecord) => ({
+          id: record.id.toString(),
+          src: record.blob_url,
+          alt: record.file_name,
+          uploadedAt: new Date(record.upload_timestamp),
+          size: record.file_size_bytes,
+        }),
+      );
+      setImages(mappedImages);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+      toast.error(message);
+      console.error("Delete error:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUserImages();
+  }, [fetchUserImages]);
+
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     imageId: string;
@@ -47,6 +85,17 @@ export default function UserDashboard() {
     imageId: "",
     imageName: "",
   });
+
+  const handleDeleteClick = (id: string) => {
+    const image = images.find((img) => img.id === id);
+    if (image) {
+      setDeleteModal({
+        isOpen: true,
+        imageId: id,
+        imageName: image.alt,
+      });
+    }
+  };
 
   const handleUploadFinished = (uploadedRecords: UploadedFileRecord[]) => {
     const newImages: ImageData[] = uploadedRecords.map((record) => ({
@@ -60,7 +109,6 @@ export default function UserDashboard() {
     setImages((prev) => [...newImages, ...prev]);
   };
 
-  // Filter images based on search
   const filteredImages = useMemo(() => {
     if (!searchQuery) return images;
     return images.filter((img) =>
@@ -68,15 +116,19 @@ export default function UserDashboard() {
     );
   }, [images, searchQuery]);
 
-  // Calculate stats
   const stats = useMemo(() => {
     const totalSize = images.reduce((acc, img) => acc + img.size, 0);
-    const totalSizeGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);
+    const formatSize = (bytes: number) => {
+      if (bytes === 0) return "0 MB";
+      const mb = bytes / (1024 * 1024);
+      if (mb < 1024) return `${mb.toFixed(2)} MB`;
+      return `${(mb / 1024).toFixed(2)} MB`;
+    };
     const currentTime = new Date().getTime();
 
     return {
       totalImages: images.length,
-      totalSize: totalSizeGB,
+      totalSize: formatSize(totalSize),
       recentUploads: images.filter((img) => {
         const daysDiff =
           (currentTime - img.uploadedAt.getTime()) / (1000 * 60 * 60 * 24);
@@ -85,26 +137,41 @@ export default function UserDashboard() {
     };
   }, [images]);
 
-  // Handle delete
-  const handleDeleteClick = (id: string) => {
-    const image = images.find((img) => img.id === id);
-    if (image) {
-      setDeleteModal({
-        isOpen: true,
-        imageId: id,
-        imageName: image.alt,
-      });
-    }
-  };
+  const handleDeleteConfirm = async () => {
+    const token = Cookies.get("token");
+    const imageId = deleteModal.imageId;
 
-  const handleDeleteConfirm = () => {
-    setImages((prev) => prev.filter((img) => img.id !== deleteModal.imageId));
-    console.log("Deleted image:", deleteModal.imageId);
+    if (!token || !imageId) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5002/dashboard/delete/${imageId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete file");
+      }
+
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
+
+      setDeleteModal({ isOpen: false, imageId: "", imageName: "" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+      toast.error(message);
+      console.error("Delete error:", error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
@@ -119,7 +186,6 @@ export default function UserDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatsCard
             title="Total Images"
@@ -129,7 +195,7 @@ export default function UserDashboard() {
           />
           <StatsCard
             title="Storage Used"
-            value={`${stats.totalSize} GB`}
+            value={`${stats.totalSize}`}
             icon={HardDrive}
             color="green"
           />
@@ -141,10 +207,8 @@ export default function UserDashboard() {
           />
         </div>
 
-        {/* Upload Zone */}
         <UploadZone onUpload={handleUploadFinished} userId={userId || 0} />
 
-        {/* Search and Filter */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-900">

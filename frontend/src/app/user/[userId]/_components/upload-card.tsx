@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { Upload, X, CheckCircle, AlertCircle } from "lucide-react";
+import Cookies from "js-cookie";
 
 // Define the shape of the data returned by your FileController
 interface UploadedFileRecord {
@@ -85,12 +86,16 @@ export default function UploadZone({ onUpload, userId }: UploadZoneProps) {
   };
 
   const uploadSingleFile = async (file: File): Promise<UploadResponse> => {
+    const token = Cookies.get("token");
     const formData = new FormData();
     formData.append("file", file);
     formData.append("user_id", userId.toString());
 
-    const response = await fetch("http://localhost:5002/api/files/upload", {
+    const response = await fetch("http://localhost:5002/dashboard/upload", {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: formData,
     });
 
