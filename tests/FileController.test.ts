@@ -1,4 +1,3 @@
-// __tests__/FileController.test.ts
 import { FileController } from "../services/user-service/src/controllers/file-controller.js";
 import { FileModel } from "../services/user-service/src/models/File.js";
 
