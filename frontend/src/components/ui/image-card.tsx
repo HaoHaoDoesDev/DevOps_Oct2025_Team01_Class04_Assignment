@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { Trash2, Download } from "lucide-react";
 
 interface ImageCardProps {
   id: string;
@@ -7,6 +7,7 @@ interface ImageCardProps {
   alt: string;
   uploadedAt: Date;
   onDelete: (id: string) => void;
+  onDownload: (id: string, fileName: string) => void;
 }
 
 export default function ImageCard({
@@ -15,6 +16,7 @@ export default function ImageCard({
   alt,
   uploadedAt,
   onDelete,
+  onDownload,
 }: ImageCardProps) {
   return (
     <div className="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
@@ -36,13 +38,23 @@ export default function ImageCard({
           </p>
         </div>
 
-        <button
-          onClick={() => onDelete(id)}
-          className="ml-2 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
-          aria-label="Delete image"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => onDownload(id, alt)}
+            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors duration-200"
+            aria-label="Download image"
+          >
+            <Download className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => onDelete(id)}
+            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
+            aria-label="Delete image"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
