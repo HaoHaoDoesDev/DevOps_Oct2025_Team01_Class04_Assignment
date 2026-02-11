@@ -32,5 +32,5 @@ jobs:
         env:
           SUPABASE_URL: "https://placeholder.supabase.co"
           SUPABASE_SERVICE_ROLE_KEY: "placeholder-key"
-          JWT_SECRET: "test-secret
+          JWT_SECRET: "test-secret"
         run: pnpm test
