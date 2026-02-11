@@ -85,7 +85,7 @@ export function LoginForm() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup className="flex flex-col gap-4">
             <Field>
-              <FieldLabel>Email</FieldLabel>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input {...register("email")} placeholder="admin@gmail.com" />
               {errors.email && (
                 <p className="text-red-500 text-xs">{errors.email.message}</p>
@@ -101,7 +101,7 @@ export function LoginForm() {
                   Forgot your password?
                 </a>
               </div>
-              <Input {...register("password")} type="password" />
+              <Input {...register("password")} id="password" type="password" />
               {errors.password && (
                 <p className="text-red-500 text-xs">
                   {errors.password.message}
