@@ -39,6 +39,43 @@ export default function UserDashboard() {
   const [images, setImages] = useState<ImageData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const handleDownload = async (id: string, fileName: string) => {
+    const token = Cookies.get("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5002/dashboard/download/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) throw new Error("Download failed");
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+
+      link.setAttribute("download", fileName);
+
+      document.body.appendChild(link);
+      link.click();
+
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Download started");
+    } catch (error) {
+      toast.error("Could not download file");
+      console.error(error);
+    }
+  };
+
   const fetchUserImages = useCallback(async () => {
     const token = Cookies.get("token");
     if (!token) return;
@@ -232,6 +269,7 @@ export default function UserDashboard() {
                 alt={image.alt}
                 uploadedAt={image.uploadedAt}
                 onDelete={handleDeleteClick}
+                onDownload={handleDownload}
               />
             ))}
           </div>
