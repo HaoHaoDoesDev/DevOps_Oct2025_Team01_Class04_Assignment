@@ -2,7 +2,7 @@ import type { Config } from 'jest';
 
 const config: Config = {
     testEnvironment: 'jsdom',
-    setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.ts','<rootDir>/tests/FileModel.test.ts','<rootDir>/tests/FileController.test.ts'],
+    setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.ts','<rootDir>/tests/FileController.test.ts'],
     transform: {
         '^.+\\.tsx?$': 'ts-jest',
     },

@@ -10,6 +10,7 @@ describe("FileController", () => {
   let next: jest.Mock;
 
   beforeEach(() => {
+    jest.clearAllMocks()
     req = {
       body: {},
       file: { originalname: "test.png", size: 100 },
@@ -24,7 +25,13 @@ describe("FileController", () => {
     };
     next = jest.fn();
   });
-
+  const mockFileRecord = { 
+    id: 1, 
+    user_id: 1, 
+    file_name: "test.png", 
+    blob_url: "https://supa.com/user_uploads/test.png",
+    file_size_bytes: 1024 
+  };
   describe("uploadFile", () => {
     it("should return 201 on success", async () => {
       (FileModel.uploadToBucket as jest.Mock).mockResolvedValue("http://url.com");
@@ -46,8 +53,7 @@ describe("FileController", () => {
 
   describe("getAllFiles", () => {
     it("should return 200 and list of files", async () => {
-      const mockFiles = [{ id: 1, name: "test" }];
-      (FileModel.getFilesByUserId as jest.Mock).mockResolvedValue(mockFiles);
+      (FileModel.getFilesByUserId as jest.Mock).mockResolvedValue([mockFileRecord]);
 
       await FileController.getAllFiles(req, res, next);
 
@@ -55,8 +61,66 @@ describe("FileController", () => {
       expect(res.json).toHaveBeenCalledWith({
         message: "Files retrieved successfully",
         count: 1,
-        data: mockFiles,
+        data: [mockFileRecord],
       });
+    });
+  });
+
+  describe("downloadFile", () => {
+    it("should stream the file to the user", async () => {
+      const mockFileRecord = { 
+        file_name: "test.png", 
+        blob_url: "https://supa.com/user_uploads/test.png" 
+      };
+      (FileModel.getFileByIdAndUser as jest.Mock).mockResolvedValue(mockFileRecord);
+      const mockBuffer = Buffer.from("fake-image-content");
+      (FileModel.downloadFromBucket as jest.Mock).mockResolvedValue(mockBuffer);
+      await FileController.downloadFile(req, res, next);
+      expect(res.setHeader).toHaveBeenCalledWith(
+        "Content-Disposition", 
+        'attachment; filename="test.png"'
+      );
+      expect(res.setHeader).toHaveBeenCalledWith(
+        "Content-Type", 
+        "application/octet-stream"
+      );
+      expect(res.send).toHaveBeenCalledWith(mockBuffer);
+    });
+    it("should return 404 if file does not exist or belongs to another user", async () => {
+      (FileModel.getFileByIdAndUser as jest.Mock).mockResolvedValue(null);
+
+      await FileController.downloadFile(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ error: "File not found or unauthorized" });
+  });
+  });
+
+describe("deleteFile", () => {
+    it("should return 200 and delete from bucket if file exists", async () => {
+      const mockBlobUrl = "https://supabase.co/storage/v1/object/public/user_uploads/1/test_file.png";
+      (FileModel.deleteFileRecord as jest.Mock).mockResolvedValue(mockBlobUrl);
+
+      (FileModel.deleteFromBucket as jest.Mock).mockResolvedValue(undefined);
+
+      await FileController.deleteFile(req, res, next);
+
+      expect(FileModel.deleteFromBucket).toHaveBeenCalledWith("1/test_file.png");
+      
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: "File deleted successfully" });
+    });
+
+    it("should return 404 if file record is not found", async () => {
+
+      (FileModel.deleteFileRecord as jest.Mock).mockResolvedValue(null);
+
+      await FileController.deleteFile(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ error: "File not found or unauthorized" });
+      
+      expect(FileModel.deleteFromBucket).not.toHaveBeenCalled();
     });
   });
 });
