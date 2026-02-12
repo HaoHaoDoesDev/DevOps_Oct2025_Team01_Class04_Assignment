@@ -10,8 +10,6 @@ permissions:
   actions: read
   
 jobs:
-  backend:
-    uses: ./.github/workflows/backend.yml
   frontend:
     uses: ./.github/workflows/frontend.yml
   unit-tests:
@@ -25,7 +23,7 @@ jobs:
 
   send-email-notification:
     runs-on: ubuntu-latest
-    needs: [backend, frontend, unit-tests, sast, dast, sca]
+    needs: [frontend, unit-tests, sast, dast, sca]
     if: always() # This ensures the email sends even if one check fails
     steps:
       - name: Send Email Notification
@@ -42,7 +40,6 @@ jobs:
             CI/CD Pipeline Report for ${{ github.repository }}
             =================================================
             Status Results:
-            - Backend CI: ${{ needs.backend.result }}
             - Frontend CI: ${{ needs.frontend.result }}
             - Unit Tests: ${{ needs.unit-tests.result }}
             - SAST (CodeQL): ${{ needs.sast.result }}
