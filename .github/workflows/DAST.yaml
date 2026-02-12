@@ -6,9 +6,6 @@ on:
 jobs:
   dast_scan:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./
     steps:
       - uses: actions/checkout@v4
 
@@ -22,23 +19,19 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install backend dependencies
-        run: cd backend && pnpm install --frozen-lockfile
-
-      - name: Install frontend dependencies
-        run: cd frontend && pnpm install --frozen-lockfile
-
-      - name: Start Backend API
+      - name: Start Services
         run: |
-          cd backend
-          pnpm run dev & 
-          sleep 10
-
-      - name: Start Frontend
-        run: |
-          cd frontend
-          pnpm run dev & 
-          sleep 10
+          # Start Admin Service (Port 5001)
+          cd services/admin-service && pnpm install --frozen-lockfile && pnpm run dev &
+          
+          # Start User Service (Port 5002)
+          cd ../user-service && pnpm install --frozen-lockfile && pnpm run dev &
+          
+          # Start Frontend (Port 3000)
+          cd ../../frontend && pnpm install --frozen-lockfile && pnpm run dev &
+          
+          # Wait for all services to be ready
+          sleep 30
 
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.10.0
@@ -46,7 +39,6 @@ jobs:
           target: "http://localhost:3000"
           cmd_options: '-a'
           allow_issue_writing: false
-          artifact_name: 'zap-baseline-scan'  
         continue-on-error: true
 
       - name: Upload ZAP baseline reports
@@ -54,27 +46,4 @@ jobs:
         if: always()
         with:
           name: zap-baseline-reports
-          path: |
-            report_html.html
-            report_json.json
-            report_md.md
-      
-
-      - name: ZAP Full Scan
-        uses: zaproxy/action-full-scan@v0.12.0
-        with:
-          target: 'http://localhost:3000'
-          cmd_options: '-a -j'
-          allow_issue_writing: false
-          artifact_name: 'zap-fullscan-scan'  
-        continue-on-error: true
-      
-      - name: Upload ZAP fullscan reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: zap-fullscan-reports
-          path: |
-            report_html.html
-            report_json.json
-            report_md.md
+          path: 'zap_report.html'

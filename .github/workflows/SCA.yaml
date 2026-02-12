@@ -6,9 +6,6 @@ on:
 jobs:
   sca_scan:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./
     steps:
       - uses: actions/checkout@v4
 
@@ -22,14 +19,20 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install backend dependencies
-        run: cd backend && pnpm install --frozen-lockfile
-
-      - name: Install frontend dependencies
-        run: cd frontend && pnpm install --frozen-lockfile
-
-      - name: Run Dependency Audit (SCA)
+      - name: Audit Admin Service
         run: |
-          cd backend && pnpm audit --prod --audit-level=high
-          cd ../frontend && pnpm audit --prod --audit-level=high
+          cd services/admin-service
+          pnpm install --frozen-lockfile
+          pnpm audit --prod --audit-level=high
 
+      - name: Audit User Service
+        run: |
+          cd services/user-service
+          pnpm install --frozen-lockfile
+          pnpm audit --prod --audit-level=high
+
+      - name: Audit Frontend
+        run: |
+          cd frontend
+          pnpm install --frozen-lockfile
+          pnpm audit --prod --audit-level=high

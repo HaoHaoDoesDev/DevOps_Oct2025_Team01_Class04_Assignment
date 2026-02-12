@@ -40,15 +40,12 @@ export const getUserColumns = (
       const handleDelete = async () => {
         if (!confirm(`Are you sure you want to delete ${user.email}?`)) return;
         try {
-          const response = await fetch(
-            `http://localhost:5001/users/${user.id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+          const response = await fetch(`/api/admin/users/${user.id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-          );
+          });
 
           if (!response.ok) {
             const errorData = await response.json();

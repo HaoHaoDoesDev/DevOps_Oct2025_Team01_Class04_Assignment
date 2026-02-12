@@ -57,7 +57,7 @@ export function AddUserDialog({ onUserAdded }: AddUserDialogProps) {
 
   const onSubmit = async (data: CreateUserFormValues) => {
     try {
-      const response = await fetch("http://localhost:5001/users", {
+      const response = await fetch("/api/admin/users", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

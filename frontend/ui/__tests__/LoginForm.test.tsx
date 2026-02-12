@@ -76,7 +76,7 @@ describe("LoginForm", () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "http://localhost:5001/auth/login",
+        "/api/admin/auth/login",
         expect.objectContaining({
           method: "POST",
           body: JSON.stringify({

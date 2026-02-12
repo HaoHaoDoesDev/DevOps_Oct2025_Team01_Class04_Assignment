@@ -1,7 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "standalone",
+  async rewrites() {
+    return [
+      {
+        source: "/api/admin/:path*",
+        // eslint-disable-next-line sonarjs/no-clear-text-protocols
+        destination: `${process.env.ADMIN_SERVICE_URL || "http://admin_api:5001"}/:path*`,
+      },
+      {
+        source: "/api/file/:path*",
+        // eslint-disable-next-line sonarjs/no-clear-text-protocols
+        destination: `${process.env.FILE_SERVICE_URL || "http://user_api:5002"}/:path*`,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

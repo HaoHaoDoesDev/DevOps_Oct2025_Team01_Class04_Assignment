@@ -55,7 +55,7 @@ describe("UserColumns - Actions Cell", () => {
     await waitFor(() => {
       expect(global.confirm).toHaveBeenCalled();
       expect(global.fetch).toHaveBeenCalledWith(
-        "http://localhost:5001/users/123",
+        "/api/admin/users/123",
         expect.objectContaining({ method: "DELETE" }),
       );
       expect(mockOnDeleted).toHaveBeenCalled();

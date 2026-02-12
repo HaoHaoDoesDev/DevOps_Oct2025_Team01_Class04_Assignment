@@ -91,7 +91,7 @@ export default function UploadZone({ onUpload, userId }: UploadZoneProps) {
     formData.append("file", file);
     formData.append("user_id", userId.toString());
 
-    const response = await fetch("http://localhost:5002/dashboard/upload", {
+    const response = await fetch("/api/file/dashboard/upload", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

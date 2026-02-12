@@ -48,5 +48,22 @@ services:
       - PORT=5002
       - DB_HOST=db
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend_app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - admin-service
+      - user-service
+    environment:
+      - ADMIN_SERVICE_URL=http://admin_api:5001
+      - FILE_SERVICE_URL=http://user_api:5002
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+
 volumes:
   postgres_data:

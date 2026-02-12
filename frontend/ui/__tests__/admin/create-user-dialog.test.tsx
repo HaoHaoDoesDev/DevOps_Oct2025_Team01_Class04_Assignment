@@ -58,7 +58,7 @@ describe("AddUserDialog", () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "http://localhost:5001/users",
+        "/api/admin/users",
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("newuser@test.com"),

@@ -44,15 +44,12 @@ export default function UserDashboard() {
     if (!token) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5002/dashboard/download/${id}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`/api/file/dashboard/download/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (!response.ok) throw new Error("Download failed");
       const blob = await response.blob();
@@ -81,7 +78,7 @@ export default function UserDashboard() {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:5002/dashboard/", {
+      const response = await fetch("/api/file/dashboard/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -181,15 +178,12 @@ export default function UserDashboard() {
     if (!token || !imageId) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5002/dashboard/delete/${imageId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`/api/file/dashboard/delete/${imageId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
