@@ -28,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [frontend, unit-tests, sast, dast, sca]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && success()
+    permissions:
+      contents: writes
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
