@@ -20,17 +20,20 @@ jobs:
 
       - name: Start Services
         run: |
-          # Start Admin Service (Port 5001)
-          cd services/admin-service && pnpm install --frozen-lockfile && pnpm run dev &
-          
-          # Start User Service (Port 5002)
-          cd ../user-service && pnpm install --frozen-lockfile && pnpm run dev &
-          
-          # Start Frontend (Port 3000)
-          cd ../../frontend && pnpm install --frozen-lockfile && pnpm run dev &
-          
-          # Wait for all services to be ready
+          pnpm install --frozen-lockfile
+
+          echo "Starting Admin Service..."
+          pnpm --filter admin-service run dev &
+
+          echo "Starting User Service..."
+          pnpm --filter user-service run dev &
+
+          echo "Starting Frontend..."
+          pnpm --filter frontend run dev &
+
+          echo "Waiting for services..."
           sleep 30
+
 
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.10.0
