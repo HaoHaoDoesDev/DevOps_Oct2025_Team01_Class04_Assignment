@@ -1,3 +1,14 @@
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      select: jest.fn(),
+      insert: jest.fn(),
+      delete: jest.fn(),
+      update: jest.fn(),
+    })),
+  })),
+}));
+
 import { FileController } from "../services/user-service/src/controllers/file-controller.js";
 import { FileModel } from "../services/user-service/src/models/File.js";
 
