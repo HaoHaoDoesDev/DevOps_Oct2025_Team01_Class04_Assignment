@@ -21,21 +21,21 @@ jobs:
           docker build \
             -f services/user-service/Dockerfile \
             -t user-service:staging \
-            ./services/user-service
+            .
 
       - name: Build Admin Service
         run: |
           docker build \
             -f services/admin-service/Dockerfile \
             -t admin-service:staging \
-            ./services/admin-service
+            .
 
       - name: Build Frontend
         run: |
           docker build \
             -f frontend/Dockerfile \
             -t frontend:staging \
-            ./frontend
+            .
 
       - name: Run Services
         run: |
@@ -58,8 +58,10 @@ jobs:
           to: ER_Poi_Voon@np.edu.sg, lucastoh06@gmail.com
           from: DevOps Team
           body: |
-            A Pull Request was merged into Staging.
-            Deployment to Staging Environment is complete.
+            A new release has been published and deployed to Staging.
             
-            PR Title: ${{ github.event.pull_request.title }}
-            Merged By: ${{ github.event.pull_request.merged_by.login }}
+            Release Version: ${{ github.event.release.tag_name }}
+            Released By: ${{ github.actor }}
+            Deployment Target: Github
+            
+            
