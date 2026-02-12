@@ -16,43 +16,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build User Service
+      - name: Build and Run with Docker Compose
         run: |
-          docker build \
-            -f services/user-service/Dockerfile \
-            -t user-service:staging \
-            .
-
-      - name: Build Admin Service
-        run: |
-          docker build \
-            -f services/admin-service/Dockerfile \
-            -t admin-service:staging \
-            .
-
-      - name: Build Frontend
-        run: |
-          docker build \
-            -f frontend/Dockerfile \
-            -t frontend:staging \
-            .
-
-      - name: Run Services
-        run: |
-          docker stop user-service admin-service frontend || true
-          docker rm user-service admin-service frontend || true
-
-          docker run -d --name user-service \
-            --network staging-network \
-            -p 5001:5000 user-service:staging
-
-          docker run -d --name admin-service \
-            --network staging-network \
-            -p 5002:5000 admin-service:staging
-
-          docker run -d --name frontend \
-            --network staging-network \
-            -p 3000:3000 frontend:staging
+          docker compose build
+          docker compose up -d
 
       - name: Send Email Notification
         if: success()
