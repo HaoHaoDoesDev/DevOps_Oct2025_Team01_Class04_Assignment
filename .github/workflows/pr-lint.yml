@@ -1,7 +1,8 @@
 name: "PR Title Lint"
 
 on:
-  workflow_call:
+  pull_request:
+    types: [opened, edited, synchronize]
 
 permissions:
   pull-requests: read
