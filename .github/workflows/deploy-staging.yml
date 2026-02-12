@@ -42,9 +42,17 @@ jobs:
           docker stop user-service admin-service frontend || true
           docker rm user-service admin-service frontend || true
 
-          docker run -d --name user-service -p 5001:5000 user-service:staging
-          docker run -d --name admin-service -p 5002:5000 admin-service:staging
-          docker run -d --name frontend -p 3000:3000 frontend:staging
+          docker run -d --name user-service \
+            --network staging-network \
+            -p 5001:5000 user-service:staging
+
+          docker run -d --name admin-service \
+            --network staging-network \
+            -p 5002:5000 admin-service:staging
+
+          docker run -d --name frontend \
+            --network staging-network \
+            -p 3000:3000 frontend:staging
 
       - name: Send Email Notification
         if: success()
