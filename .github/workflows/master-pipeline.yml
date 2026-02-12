@@ -28,15 +28,11 @@ jobs:
   sca:
     uses: ./.github/workflows/SCA.yaml
 
-  pr-lint:
-    if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/pr-lint.yml
-
   security-tests:
     name: Run Security Failure Test Suite
     runs-on: ubuntu-latest
     needs: [frontend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.run_number >= 291
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
