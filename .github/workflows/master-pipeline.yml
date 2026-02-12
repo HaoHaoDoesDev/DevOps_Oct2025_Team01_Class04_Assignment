@@ -49,6 +49,8 @@ jobs:
 
       - name: Run Security Failure Test Suite
         run: pnpm run test:security
+        env:
+          DEMO_SECURITY: "true"
 
   create-draft-release:
     name: Create Draft Release
