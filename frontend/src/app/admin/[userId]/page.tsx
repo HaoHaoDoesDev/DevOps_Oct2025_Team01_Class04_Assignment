@@ -15,7 +15,7 @@ export default function AdminDashboard() {
   const fetchUsers = useCallback(async () => {
     if (!token) return;
     try {
-      const response = await fetch("http://localhost:5001/users", {
+      const response = await fetch("/api/admin/users", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

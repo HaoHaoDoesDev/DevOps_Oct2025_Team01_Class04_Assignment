@@ -6,6 +6,7 @@ import { db } from "./config/db.js";
 import fileRoutes from "./routes/fileRoute.js";
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5002; 
 const fileRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, 
