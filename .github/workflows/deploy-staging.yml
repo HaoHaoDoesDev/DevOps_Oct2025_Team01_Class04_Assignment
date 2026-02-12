@@ -16,6 +16,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: |
+          touch .env
+          # Use the Docker container names as the hostnames
+          echo "NEXT_PUBLIC_AUTH_API_URL=http://admin_api:5001" >> .env
+          echo "NEXT_PUBLIC_USER_API_URL=http://user_api:5002" >> .env
+          
+          # These are also needed for your Next.js rewrites
+          echo "ADMIN_SERVICE_URL=http://admin_api:5001" >> .env
+          echo "FILE_SERVICE_URL=http://user_api:5002" >> .env
+          
+          # Add the rest of your secrets
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_HOST=db" >> .env
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env
+
       - name: Build and Run with Docker Compose
         run: |
           docker compose build
