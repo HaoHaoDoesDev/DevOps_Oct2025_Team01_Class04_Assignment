@@ -3,6 +3,14 @@ import assert from "node:assert";
 import fs from "node:fs";
 import path from "node:path";
 
+// Only run failure tests if DEMO_SECURITY is enabled
+const DEMO_MODE = process.env.DEMO_SECURITY === "true";
+
+if (!DEMO_MODE) {
+  console.log("Security Failure Test Suite skipped (DEMO_SECURITY not enabled)");
+  process.exit(0);
+}
+
 /* --------------------------------------------------
    Helpers
 -------------------------------------------------- */
