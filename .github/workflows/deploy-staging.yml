@@ -1,0 +1,66 @@
+name: Deploy to Staging
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    
+    name: Deploy to staging 
+    runs-on: ubuntu-latest
+    environment: 
+      name: staging
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build User Service
+        run: |
+          docker build \
+            -f services/user-service/Dockerfile \
+            -t user-service:staging \
+            ./services/user-service
+
+      - name: Build Admin Service
+        run: |
+          docker build \
+            -f services/admin-service/Dockerfile \
+            -t admin-service:staging \
+            ./services/admin-service
+
+      - name: Build Frontend
+        run: |
+          docker build \
+            -f frontend/Dockerfile \
+            -t frontend:staging \
+            ./frontend
+
+      - name: Run Services
+        run: |
+          docker stop user-service admin-service frontend || true
+          docker rm user-service admin-service frontend || true
+
+          docker run -d --name user-service -p 5001:5000 user-service:staging
+          docker run -d --name admin-service -p 5002:5000 admin-service:staging
+          docker run -d --name frontend -p 3000:3000 frontend:staging
+
+      - name: Send Email Notification
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "[DevOps] Staging Updated"
+          to: ER_Poi_Voon@np.edu.sg, lucastoh06@gmail.com
+          from: DevOps Team
+          body: |
+            A Pull Request was merged into Staging.
+            Deployment to Staging Environment is complete.
+            
+            PR Title: ${{ github.event.pull_request.title }}
+            Merged By: ${{ github.event.pull_request.merged_by.login }}
