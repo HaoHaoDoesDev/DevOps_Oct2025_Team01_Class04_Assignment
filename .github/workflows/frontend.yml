@@ -38,11 +38,13 @@ jobs:
       - name: Next.js Build Check
         run: pnpm run build
 
-      - name: Run Cypress E2E Tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: node .next/standalone/server.js
-          wait-on: 'http://localhost:3000'
+      - name: Start frontend server
+        run: |
+          node frontend/.next/standalone/server.js &
+          npx wait-on http://localhost:3000
+
+      - name: Run Cypress
+        run: pnpm --filter frontend exec cypress run
         env:
           ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
