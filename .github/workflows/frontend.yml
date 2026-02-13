@@ -38,12 +38,17 @@ jobs:
       - name: Next.js Build Check
         run: pnpm run build
 
+      - name: Build frontend (standalone)
+        run: |
+          cd frontend
+          NODE_ENV=production pnpm run build
+
       - name: Start frontend server
         run: |
-          node .next/standalone/server.js &
+          node frontend/.next/standalone/server.js &
           npx wait-on http://localhost:3000
 
-      - name: Run Cypress
+      - name: Run Cypress E2E Tests
         run: pnpm --filter frontend exec cypress run
         env:
           ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
