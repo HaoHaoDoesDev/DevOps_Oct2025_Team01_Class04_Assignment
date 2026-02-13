@@ -64,6 +64,19 @@ services:
       - FILE_SERVICE_URL=http://user_api:5002
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+  
+  cypress:
+    image: cypress/included:15.10.0
+    depends_on:
+      - frontend
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TEST_USER_PASSWORD: ${TEST_USER_PASSWORD}
+    working_dir: /e2e
+    volumes:
+      - ./frontend/cypress:/e2e/cypress
+      - ./frontend/cypress.config.js:/e2e/cypress.config.js
 
 volumes:
   postgres_data:

@@ -9,7 +9,7 @@ describe("End-to-End User Lifecycle Flow", () => {
   // 1️ Admin Login, Create Student and Logout
   // --------------------------------------------
   it("Admin creates a new student account", () => {
-    cy.visit("http://localhost:3000/authentication");
+    cy.visit("http://frontend:3000/authentication");
 
     // Login as Admin
     cy.get('input[name="email"]').type(adminEmail);
@@ -37,7 +37,7 @@ describe("End-to-End User Lifecycle Flow", () => {
   // 2️ User Login
   // --------------------------------------------
   it("New student logs in successfully", () => {
-    cy.visit("http://localhost:3000/authentication");
+    cy.visit("http://frontend:3000/authentication");
 
     cy.get('input[name="email"]').type(userEmail);
     cy.get('input[name="password"]').type(userPassword);
@@ -51,7 +51,7 @@ describe("End-to-End User Lifecycle Flow", () => {
   // 3️ User Upload File
   // --------------------------------------------
   it("User uploads a file", () => {
-    cy.visit("http://localhost:3000/authentication");
+    cy.visit("http://frontend:3000/authentication");
 
     cy.get('input[name="email"]').type(userEmail);
     cy.get('input[name="password"]').type(userPassword);
@@ -70,7 +70,7 @@ describe("End-to-End User Lifecycle Flow", () => {
   // 4 User Download File
   // -------------------------------------------------
   it("User downloads their file", () => {
-    cy.visit("http://localhost:3000/authentication");
+    cy.visit("http://frontend:3000/authentication");
 
     cy.get('input[name="email"]').type(userEmail);
     cy.get('input[name="password"]').type(userPassword);
@@ -91,7 +91,7 @@ describe("End-to-End User Lifecycle Flow", () => {
   // 5 User Deletes File and Logout
   // -------------------------------------------------
   it("User deletes an image", () => {
-    cy.visit("http://localhost:3000/authentication");
+    cy.visit("http://frontend:3000/authentication");
 
     cy.get('input[name="email"]').type(userEmail);
     cy.get('input[name="password"]').type(userPassword);
@@ -115,7 +115,7 @@ describe("End-to-End User Lifecycle Flow", () => {
   // 6 Admin deletes that user
   // --------------------------------------------------
   it("Admin deletes the created user", () => {
-    cy.visit("http://localhost:3000/authentication");
+    cy.visit("http://frontend:3000/authentication");
 
     cy.get('input[name="email"]').type(adminEmail);
     cy.get('input[name="password"]').type(adminPassword);

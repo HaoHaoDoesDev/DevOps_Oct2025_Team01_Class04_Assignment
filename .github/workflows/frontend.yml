@@ -42,31 +42,19 @@ jobs:
         run: |
           NODE_ENV=production pnpm run build
 
-      - name: Create .env file
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and run containers
         run: |
-          touch .env
-          # Use the Docker container names as the hostnames
-          echo "NEXT_PUBLIC_AUTH_API_URL=http://admin_api:5001" >> .env
-          echo "NEXT_PUBLIC_USER_API_URL=http://user_api:5002" >> .env
-          
-          # These are also needed for your Next.js rewrites
-          echo "ADMIN_SERVICE_URL=http://admin_api:5001" >> .env
-          echo "FILE_SERVICE_URL=http://user_api:5002" >> .env
-          
-          # Add the rest of your secrets
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DB_HOST=db" >> .env
-          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .en
+          docker-compose up --build -d
 
-      - name: Start frontend & dependencies
-        run: docker compose up -d frontend
-
-      - name: Wait for frontend to be ready
-        run: npx wait-on http://localhost:3000
-
-      - name: Run Cypress
-        run: pnpm exec cypress run
-
+      - name: Run Cypress inside container
+        run: |
+          docker-compose run --rm cypress
