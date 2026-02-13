@@ -41,7 +41,6 @@ jobs:
       - name: Run Cypress E2E Tests
         uses: cypress-io/github-action@v6
         with:
-          working-directory: frontend
           start: node .next/standalone/server.js
           wait-on: 'http://localhost:3000'
         env:
