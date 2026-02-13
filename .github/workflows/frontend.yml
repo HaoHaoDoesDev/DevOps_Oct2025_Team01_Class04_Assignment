@@ -42,8 +42,8 @@ jobs:
         run: |
           NODE_ENV=production pnpm run build
 
-      - name: Run frontend container
-        run: docker run -d -p 3000:3000 --name frontend frontend
+      - name: Start frontend & dependencies
+        run: docker compose up -d frontend admin-service user-service
 
       - name: Wait for frontend to be ready
         run: npx wait-on http://localhost:3000
