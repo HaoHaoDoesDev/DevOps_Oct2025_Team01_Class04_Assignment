@@ -39,7 +39,12 @@ jobs:
         run: pnpm run build
 
       - name: Run Cypress E2E Tests
-        run: |
-          pnpm run start &            # start Next.js server in background
-          npx wait-on http://localhost:3000
-          npx cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: frontend
+          start: pnpm run start
+          wait-on: http://localhost:3000
+        env:
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}

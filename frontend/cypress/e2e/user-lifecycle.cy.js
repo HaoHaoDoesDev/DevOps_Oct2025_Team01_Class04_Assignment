@@ -1,10 +1,10 @@
 describe('End-to-End User Lifecycle Flow', () => {
 
-  const adminEmail = 'admin@gmail.com';
-  const adminPassword = 'admin';
-
+  const adminEmail = Cypress.env('ADMIN_EMAIL');
+  const adminPassword = Cypress.env('ADMIN_PASSWORD');
+  
+  const userPassword = Cypress.env('TEST_USER_PASSWORD');
   const userEmail = `student_${Date.now()}@np.edu.sg`; 
-  const userPassword = 'password123';
 
   // --------------------------------------------
   // 1️ Admin Login, Create Student and Logout
