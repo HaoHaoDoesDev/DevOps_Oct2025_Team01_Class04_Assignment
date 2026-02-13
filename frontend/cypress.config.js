@@ -8,8 +8,8 @@ module.exports = {
   },
 
   env: {
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
-  TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
-},
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+    TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
+  },
 };
