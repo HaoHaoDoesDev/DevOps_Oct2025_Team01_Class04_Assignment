@@ -42,13 +42,14 @@ jobs:
         run: |
           NODE_ENV=production pnpm run build
 
-      - name: Start frontend server
-        run: |
-          node frontend/.next/standalone/server.js &
-          npx wait-on http://localhost:3000
+      - name: Run frontend container
+        run: docker run -d -p 3000:3000 --name frontend frontend
 
-      - name: Run Cypress E2E Tests
-        run: pnpm --filter frontend exec cypress run
+      - name: Wait for frontend to be ready
+        run: npx wait-on http://localhost:3000
+
+      - name: Run Cypress
+        run: pnpm exec cypress run
         env:
           ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
