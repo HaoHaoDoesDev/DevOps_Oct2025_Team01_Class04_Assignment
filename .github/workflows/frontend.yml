@@ -40,7 +40,6 @@ jobs:
 
       - name: Build frontend (standalone)
         run: |
-          cd frontend
           NODE_ENV=production pnpm run build
 
       - name: Start frontend server
