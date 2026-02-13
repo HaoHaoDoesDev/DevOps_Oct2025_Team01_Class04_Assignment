@@ -37,3 +37,24 @@ jobs:
 
       - name: Next.js Build Check
         run: pnpm run build
+
+      - name: Build frontend (standalone)
+        run: |
+          NODE_ENV=production pnpm run build
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and run containers
+        run: |
+          docker-compose up --build -d
+
+      - name: Run Cypress inside container
+        run: |
+          docker-compose run --rm cypress
