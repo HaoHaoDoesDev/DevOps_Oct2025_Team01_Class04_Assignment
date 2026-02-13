@@ -42,8 +42,8 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: frontend
-          start: pnpm run start
-          wait-on: http://localhost:3000
+          start: node .next/standalone/server.js
+          wait-on: 'http://localhost:3000'
         env:
           ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
